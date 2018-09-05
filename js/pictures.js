@@ -23,7 +23,7 @@ var getUrl = function (i) {
   return 'photos/' + (i + 1) + '.jpg';
 };
 var getLikes = function () {
-  return getRandomNumber(200, 15);
+  return getRandomNumber(201, 15);
 };
 var getNewComment = function () {
   return comments[getRandomNumber(comments.length)];
