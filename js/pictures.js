@@ -70,13 +70,15 @@ var renderPhoto = function (photo) {
 };
 
 // Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
-var fragment = document.createDocumentFragment();
+var drawPictures = function () {
+  var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < photos.length; i++) {
-  fragment.appendChild(renderPhoto(photos[i]));
-}
-pictures.appendChild(fragment);
-
+  for (i = 0; i < photos.length; i++) {
+    fragment.appendChild(renderPhoto(photos[i]));
+  }
+  pictures.appendChild(fragment);
+};
+drawPictures();
 // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива:
 var showElement = function (element) {
   element.classList.remove('hidden');
@@ -84,6 +86,10 @@ var showElement = function (element) {
 
 var bigPicture = document.querySelector('.big-picture');
 showElement(bigPicture);
+// url avatar
+var getAvatarUrl = function () {
+  return 'img/avatar-' + getRandomNumber(7, 1) + '.svg';
+};
 var createBigPicture = function () {
   bigPicture.querySelector('.big-picture__img').setAttribute('src', photos[1].url);
   bigPicture.querySelector('.likes-count').textContent = photos[1].likes;
@@ -92,14 +98,33 @@ var createBigPicture = function () {
 
   var socialComments = bigPicture.querySelector('.social__comments');
   var commentFragment = document.createDocumentFragment();
-  var socialComment = socialComments.querySelector('.social-comment');
+  var socialComment = socialComments.querySelector('.social__comment');
   var commentTemplate = socialComment.cloneNode(true);
 
-  for (var i = 0; i < photos[1].comments.length; i++) {
-    commentTemplate.querySelector('p').textContent = photos[1].comments[i];
-    commentFragment.appendChild(commentTemplate);
+  // удаление шаблонных элементов
+  var currentSocialCommentsLength = socialComments.childElementCount;
+  for (i = currentSocialCommentsLength - 1; i >= 0; i--) {
+    socialComments.removeChild(socialComments.children[i]);
+  }
+
+  var addCommentFragment = function (numberOfComment) {
+    commentTemplate.querySelector('p').textContent = photos[1].comments[numberOfComment];
+    commentTemplate.querySelector('img').setAttribute('src', getAvatarUrl());
+    return commentTemplate.cloneNode(true);
+  };
+  for (i = 0; i < photos[1].comments.length; i++) {
+    commentFragment.appendChild(addCommentFragment(i));
   }
   socialComments.appendChild(commentFragment);
 };
 
 createBigPicture();
+// Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
+// добавив им класс .visually-hidden.
+var socialCommentCount = document.querySelector('.social__comment-count');
+var commentsLoader = document.querySelector('.comments-loader');
+var hideElements = function (element) {
+  element.classList.add('visually-hidden');
+};
+hideElements(socialCommentCount);
+hideElements(commentsLoader);
