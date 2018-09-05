@@ -11,8 +11,7 @@ var descriptions = ['Тестим новую камеру!',
   'Как же круто тут кормят',
   'Отдыхаем...',
   'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......',
-  'Вот это тачка!'
-];
+  'Вот это тачка!'];
 // Создайте массив, состоящий из 25 сгенерированных JS объектов, которые будут описывать фотографии, размещённые другими пользователями:
 var getRandomNumber = function (max, min) {
   if (typeof (min) === 'undefined') {
@@ -20,7 +19,7 @@ var getRandomNumber = function (max, min) {
   }
   return Math.floor(Math.random() * (max - min) + min);
 };
-var getUrl = function () {
+var getUrl = function (i) {
   return 'photos/' + (i + 1) + '.jpg';
 };
 var getLikes = function () {
