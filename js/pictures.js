@@ -118,7 +118,7 @@ var createBigPicture = function () {
   var socialComments = bigPicture.querySelector('.social__comments');
   var commentFragment = document.createDocumentFragment();
   var socialComment = socialComments.querySelector('.social__comment');
-  var commentTemplate = socialComment.cloneNode(true);
+
 
   // удаление шаблонных элементов
   var currentSocialCommentsLength = socialComments.childElementCount;
@@ -127,9 +127,10 @@ var createBigPicture = function () {
   }
 
   var addCommentFragment = function (numberOfComment) {
+    var commentTemplate = socialComment.cloneNode(true);
     commentTemplate.querySelector('p').textContent = photos[CURRENT_PHOTO].comments[numberOfComment];
     commentTemplate.querySelector('img').setAttribute('src', getAvatarUrl());
-    return commentTemplate.cloneNode(true);
+    return commentTemplate;
   };
   for (i = 0; i < photos[CURRENT_PHOTO].comments.length; i++) {
     commentFragment.appendChild(addCommentFragment(i));
