@@ -68,7 +68,8 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var COMMENTS_LENGTH = 10;
 var PHOTOS_LENGTH = 25;
-var CURRENT_PHOTO = 0;
+// var CURRENT_PHOTO = 0;
+
 // Создайте массив, состоящий из 25 сгенерированных JS объектов, которые будут описывать фотографии, размещённые другими пользователями:
 var getRandomNumber = function (max, min, isFor) {
   if (typeof (min) === 'undefined') {
@@ -153,13 +154,12 @@ var showElement = function (element) {
 };
 
 var bigPicture = document.querySelector('.big-picture');
-// showElement(bigPicture);
 
 // url avatar
 var getAvatarUrl = function () {
   return 'img/avatar-' + getRandomNumber(6, false) + '.svg';
 };
-var createBigPicture = function () {
+var createBigPicture = function (CURRENT_PHOTO) {
   bigPicture.querySelector('.big-picture__img').querySelector('img').setAttribute('src', photos[CURRENT_PHOTO].url);
   bigPicture.querySelector('.likes-count').textContent = photos[CURRENT_PHOTO].likes;
   bigPicture.querySelector('.comments-count').textContent = photos[CURRENT_PHOTO].comments.length;
@@ -188,8 +188,24 @@ var createBigPicture = function () {
   socialComments.appendChild(commentFragment);
 };
 
-createBigPicture();
 
+// обработчики клика на все фотографии, который показывает bigPicture
+var pictures = document.querySelectorAll('.picture');
+var onPicturesClick = function () {
+  for (var i = 0; i < pictures.length; i++) {
+    pictures[i].addEventListener('click', function (evnt) {
+
+      for (var i = 0; i < pictures.length; i++) {
+        if (pictures[i].querySelector('img') === evnt.target) {
+          createBigPicture(i);
+        }
+      }
+      showElement(bigPicture);
+    });
+  }
+};
+
+onPicturesClick();
 // Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
 // добавив им класс .visually-hidden.
 
@@ -316,4 +332,4 @@ effectLevelPin.addEventListener('mouseup', function () {
   effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
 
-//Показ изображения в полноэкранном режиме
+// Показ изображения в полноэкранном режиме
