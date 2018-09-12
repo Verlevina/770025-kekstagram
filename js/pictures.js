@@ -1,4 +1,9 @@
 'use strict';
+var fileUploadControl = document.querySelector('#upload-file');
+// поле редактирования изображения
+var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+// кнопка закрытия редактирования изображения
+var imgUploadCancel = document.querySelector('.img-upload__cancel');
 var photos = [];
 var comments = [
   'Всё отлично!',
@@ -103,7 +108,7 @@ var showElement = function (element) {
 };
 
 var bigPicture = document.querySelector('.big-picture');
-showElement(bigPicture);
+// showElement(bigPicture);
 
 // url avatar
 var getAvatarUrl = function () {
@@ -150,3 +155,23 @@ var hideElements = function (element) {
 
 hideElements(socialCommentCount);
 hideElements(commentsLoader);
+// 1.3. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file,
+// который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
+var onDocumentPressESC = function (evnt) {
+  if (evnt.keyCode === 27) {
+    closeFileUpload();
+  }
+};
+
+fileUploadControl.addEventListener('change', function () {
+  imgUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onDocumentPressESC);
+});
+
+
+// закрытие формы редактировония изображения
+var closeFileUpload = function () {
+  imgUploadOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onDocumentPressESC);
+};
+imgUploadOverlay.addEventListener('click', closeFileUpload);
