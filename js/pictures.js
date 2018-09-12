@@ -12,6 +12,8 @@ var photos = [];
 var effectDeepControlMaxValue = 100;
 var effectDeepControlMinValue = 0;
 var effectLevelLine = document.querySelector('.effect-level__line');
+// форма загрузки фото
+var imgUploadForm = document.querySelector('.img-upload__form');
 //  объект со шкалой глубин эффектов фотто
 var DEEP_EFFECT = [
   {
@@ -68,7 +70,10 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var COMMENTS_LENGTH = 10;
 var PHOTOS_LENGTH = 25;
-// var CURRENT_PHOTO = 0;
+var SCALE_STEP = 25;
+var MIN_SCALE_CONTROL_VALUE = 0;
+var MAX_SCALE_CONTROL_VALUE = 100;
+var ESC_KEYCODE = 27;
 
 // Создайте массив, состоящий из 25 сгенерированных JS объектов, которые будут описывать фотографии, размещённые другими пользователями:
 var getRandomNumber = function (max, min, isFor) {
@@ -164,6 +169,9 @@ var createBigPicture = function (CURRENT_PHOTO) {
   bigPicture.querySelector('.likes-count').textContent = photos[CURRENT_PHOTO].likes;
   bigPicture.querySelector('.comments-count').textContent = photos[CURRENT_PHOTO].comments.length;
   bigPicture.querySelector('.social__caption').textContent = photos[CURRENT_PHOTO].description;
+  bigPicture.querySelector('.big-picture__cancel').addEventListener('click', function () {
+    bigPicture.classList.add('hidden');
+  });
 
   var socialComments = bigPicture.querySelector('.social__comments');
   var commentFragment = document.createDocumentFragment();
@@ -190,13 +198,13 @@ var createBigPicture = function (CURRENT_PHOTO) {
 
 
 // обработчики клика на все фотографии, который показывает bigPicture
-var pictures = document.querySelectorAll('.picture');
+var picturesLink = document.querySelectorAll('.picture');
 var onPicturesClick = function () {
-  for (var i = 0; i < pictures.length; i++) {
-    pictures[i].addEventListener('click', function (evnt) {
+  for (var i = 0; i < picturesLink.length; i++) {
+    picturesLink[i].addEventListener('click', function (evnt) {
 
-      for (var i = 0; i < pictures.length; i++) {
-        if (pictures[i].querySelector('img') === evnt.target) {
+      for (var i = 0; i < picturesLink.length; i++) {
+        if (picturesLink[i].querySelector('img') === evnt.target) {
           createBigPicture(i);
         }
       }
@@ -218,8 +226,9 @@ hideElements(commentsLoader);
 // 1.3. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file,
 // который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
 var onDocumentPressESC = function (evnt) {
-  if (evnt.keyCode === 27) {
+  if (evnt.keyCode === ESC_KEYCODE) {
     closeFileUpload();
+  //  imgUploadForm.reset();
   }
 };
 
@@ -258,17 +267,17 @@ var addScaleImgUploadPreview = function () {
 // задаёт масштаб. Например, если в поле
 // стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75)
 scaleControlSmaller.addEventListener('click', function () {
-  scaleControlValue.value = (getScaleControlValue() - 25) + '%';
-  if (getScaleControlValue() <= 0) {
-    scaleControlValue.value = '0%';
+  scaleControlValue.value = (getScaleControlValue() - SCALE_STEP) + '%';
+  if (getScaleControlValue() <= MIN_SCALE_CONTROL_VALUE) {
+    scaleControlValue.value = MIN_SCALE_CONTROL_VALUE + '%';
   }
   addScaleImgUploadPreview();
 });
 
 scaleControlBigger.addEventListener('click', function () {
-  scaleControlValue.value = (getScaleControlValue() + 25) + '%';
-  if (getScaleControlValue() >= 100) {
-    scaleControlValue.value = '100%';
+  scaleControlValue.value = (getScaleControlValue() + SCALE_STEP) + '%';
+  if (getScaleControlValue() >= MAX_SCALE_CONTROL_VALUE) {
+    scaleControlValue.value = MAX_SCALE_CONTROL_VALUE + '%';
   }
   addScaleImgUploadPreview();
 });
@@ -332,4 +341,4 @@ effectLevelPin.addEventListener('mouseup', function () {
   effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
 
-// Показ изображения в полноэкранном режиме
+
