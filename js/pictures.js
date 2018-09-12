@@ -11,7 +11,7 @@ var photos = [];
 // максимальное значение input, хранящего текущую глубину эффекта
 var effectDeepControlMaxValue = 100;
 var effectDeepControlMinValue = 0;
-var effectLevelLine = document.querySelector('.effect-level__line');
+// var effectLevelLine = document.querySelector('.effect-level__line');
 // форма загрузки фото
 var imgUploadForm = document.querySelector('.img-upload__form');
 //  объект со шкалой глубин эффектов фотто
@@ -228,7 +228,7 @@ hideElements(commentsLoader);
 var onDocumentPressESC = function (evnt) {
   if (evnt.keyCode === ESC_KEYCODE) {
     closeFileUpload();
-  //  imgUploadForm.reset();
+    imgUploadForm.reset();
   }
 };
 
