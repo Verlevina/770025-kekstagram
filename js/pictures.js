@@ -1,9 +1,12 @@
 'use strict';
-var fileUploadControl = document.querySelector('#upload-file');
 // поле редактирования изображения
 var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+var fileUploadControl = document.querySelector('#upload-file');
 // кнопка закрытия редактирования изображения
 var imgUploadCancel = document.querySelector('.img-upload__cancel');
+var imgUploadPrewiev = document.querySelector('.img-upload__preview img');
+var socialCommentCount = document.querySelector('.social__comment-count');
+var commentsLoader = document.querySelector('.comments-loader');
 var photos = [];
 var comments = [
   'Всё отлично!',
@@ -147,8 +150,7 @@ createBigPicture();
 
 // Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
 // добавив им класс .visually-hidden.
-var socialCommentCount = document.querySelector('.social__comment-count');
-var commentsLoader = document.querySelector('.comments-loader');
+
 var hideElements = function (element) {
   element.classList.add('visually-hidden');
 };
@@ -174,4 +176,65 @@ var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', onDocumentPressESC);
 };
-imgUploadOverlay.addEventListener('click', closeFileUpload);
+imgUploadCancel.addEventListener('click', closeFileUpload);
+// 2. Редактирование изображения и ограничения, накладываемые на поля
+// 2.1. Масштаб:
+// При нажатии на кнопки .scale__control--smaller и .scale__control--bigger должно изменяться значение поля
+// .scale__control--value.
+var scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
+var scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
+var scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
+
+var getScaleControlValue = function () {
+  var value = scaleControlValue.value;
+  var quantity = value.slice(0, value.length - 1);
+  return +quantity;
+};
+// добавляем эффект масштаба
+var addScaleImgUploadPreview = function () {
+  imgUploadPrewiev.style.transform = 'scale(' + getScaleControlValue() / 100 + ')';
+};
+//  При изменении значения поля .scale__control--value изображению .img-upload__preview должен добавляться
+// соответствующий стиль CSS, который с помощью трансформации
+// ?????????????????????????????????????????????????????????????????????????????????????????effect-level???????????????????????????????????????????????????????
+// задаёт масштаб. Например, если в поле
+// стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75)
+scaleControlSmaller.addEventListener('click', function () {
+  scaleControlValue.value = (getScaleControlValue() - 25) + '%';
+  if (getScaleControlValue() <= 0) {
+    scaleControlValue.value = '0%';
+  }
+  addScaleImgUploadPreview();
+});
+
+scaleControlBigger.addEventListener('click', function () {
+  scaleControlValue.value = (getScaleControlValue() + 25) + '%';
+  if (getScaleControlValue() >= 100) {
+    scaleControlValue.value = '100%';
+  }
+  addScaleImgUploadPreview();
+});
+
+// 2.2. Наложение эффекта на изображение:
+// imgUploadPrewiev
+// список радио
+var effectsRadio = document.querySelectorAll('.effects__radio');
+// поиск выбранного radiobutton и выбор эффекта
+var findSelectedRadio = function (evnt) {
+  var selectedEffectsRadio = evnt.target;
+  return (selectedEffectsRadio.id).slice(7);
+};
+
+
+// клик по радио
+var onEffectsRadioClick = function () {
+  for (var i = 0; i < effectsRadio.length; i++) {
+    effectsRadio[i].addEventListener('click', function (evnt) {
+
+      imgUploadPrewiev.className = '';
+
+      imgUploadPrewiev.classList.add('effects__preview--' + findSelectedRadio(evnt));
+    });
+  }
+};
+onEffectsRadioClick();
