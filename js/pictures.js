@@ -8,6 +8,48 @@ var imgUploadPrewiev = document.querySelector('.img-upload__preview img');
 var socialCommentCount = document.querySelector('.social__comment-count');
 var commentsLoader = document.querySelector('.comments-loader');
 var photos = [];
+// максимальное значение input, хранящего текущую глубину эффекта
+var effectDeepControlMaxValue = 100;
+var effectDeepControlMinValue = 0;
+var effectLevelLine = document.querySelector('.effect-level__line');
+//  объект со шкалой глубин эффектов фотто
+var DEEP_EFFECT = [
+  {
+    name: 'chrome',
+    value: 'grayscale',
+    min: 0,
+    max: 1,
+    unit: ''
+  },
+  {name: 'sepia',
+    value: 'sepia',
+    min: 0,
+    max: 1,
+    unit: ''
+  },
+  {
+    name: 'marvin',
+    value: 'invert',
+    min: 1,
+    max: 100,
+    unit: '%'
+  },
+  {
+    name: 'phobos',
+    value: 'blur',
+    min: 0,
+    max: 3,
+    unit: 'px'
+  },
+  {
+    name: 'heat',
+    value: 'brightness',
+    min: 1,
+    max: 3,
+    unit: ''
+  }
+];
+
 var comments = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -216,25 +258,62 @@ scaleControlBigger.addEventListener('click', function () {
 });
 
 // 2.2. Наложение эффекта на изображение:
-// imgUploadPrewiev
 // список радио
 var effectsRadio = document.querySelectorAll('.effects__radio');
+// инпут со значением глубины эффекта
+var effectLevelValue = document.querySelector('.effect-level__value');
+
 // поиск выбранного radiobutton и выбор эффекта
-var findSelectedRadio = function (evnt) {
-  var selectedEffectsRadio = evnt.target;
+var findSelectedEffect = function () {
+  var selectedEffectsRadio = document.querySelector('.effects__radio:checked');
   return (selectedEffectsRadio.id).slice(7);
 };
+// Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта записывается в поле .scale__value
+// поиск реального значения глубины эффекта относительно input
+var calculateCurrentDeepEffect = function (effectObject) {
+  var rez = ((+effectLevelValue.value) * (effectObject.max - effectObject.min) / effectDeepControlMaxValue) + effectObject.min;
+  return rez;
+};
 
+// 2.2. Наложение эффекта на изображение:
+var selectedEffect = findSelectedEffect();
+var onEffectLevelRadioChange = function () {
+
+  effectLevelValue.addEventListener('change', function () {
+  // document.querySelector('.img-upload__effect-level').addEventListener('click', function () {
+    var effect = findSelectedEffect();
+    for (var i = 0; i < DEEP_EFFECT.length; i++) {
+      if (DEEP_EFFECT[i].name === effect) {
+        var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
+        imgUploadPrewiev.style.filter = filterValue;
+      }
+    }
+    effectLevelPin.style.left = effectLevelValue.value;
+  });
+};
 
 // клик по радио
 var onEffectsRadioClick = function () {
   for (var i = 0; i < effectsRadio.length; i++) {
-    effectsRadio[i].addEventListener('click', function (evnt) {
-
+    effectsRadio[i].addEventListener('click', function () {
+      selectedEffect = findSelectedEffect();
       imgUploadPrewiev.className = '';
-
-      imgUploadPrewiev.classList.add('effects__preview--' + findSelectedRadio(evnt));
+      imgUploadPrewiev.classList.add('effects__preview--' + selectedEffect);
+      onEffectLevelRadioChange();
+      effectLevelValue.value = effectDeepControlMinValue;
     });
   }
 };
 onEffectsRadioClick();
+// При выборе эффекта «Оригинал» слайдер скрывается.
+
+effectsRadio[0].addEventListener('click', closeFileUpload);
+// Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта
+// записывается в поле .scale__value.
+
+var effectLevelPin = document.querySelector('.effect-level__pin');
+effectLevelPin.addEventListener('mouseup', function () {
+  effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
+});
+
+//Показ изображения в полноэкранном режиме
