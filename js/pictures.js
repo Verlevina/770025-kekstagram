@@ -4,7 +4,7 @@ var imgUploadOverlay = document.querySelector('.img-upload__overlay');
 var fileUploadControl = document.querySelector('#upload-file');
 // кнопка закрытия редактирования изображения
 var imgUploadCancel = document.querySelector('.img-upload__cancel');
-var imgUploadPrewiev = document.querySelector('.img-upload__preview img');
+var imgUploadPreview = document.querySelector('.img-upload__preview img');
 var socialCommentCount = document.querySelector('.social__comment-count');
 var commentsLoader = document.querySelector('.comments-loader');
 var photos = [];
@@ -190,11 +190,15 @@ var createBigPicture = function (CURRENT_PHOTO) {
   }
   socialComments.appendChild(commentFragment);
 };
+
 // удаление шаблонных элементов
 var currentSocialCommentsLength = socialComments.childElementCount;
-for (var i = currentSocialCommentsLength - 1; i >= 0; i--) {
-  socialComments.removeChild(socialComments.children[i]);
-}
+var deleteSocialComments = function () {
+  for (var i = currentSocialCommentsLength - 1; i >= 0; i--) {
+    socialComments.removeChild(socialComments.children[i]);
+  }
+};
+deleteSocialComments();
 
 // обработчики клика на все фотографии, который показывает bigPicture
 var picturesLink = document.querySelectorAll('.picture');
@@ -270,7 +274,7 @@ var getScaleControlValue = function () {
 };
 // добавляем эффект масштаба
 var addScaleImgUploadPreview = function () {
-  imgUploadPrewiev.style.transform = 'scale(' + getScaleControlValue() / 100 + ')';
+  imgUploadPreview.style.transform = 'scale(' + getScaleControlValue() / 100 + ')';
 };
 //  При изменении значения поля .scale__control--value изображению .img-upload__preview должен добавляться
 // соответствующий стиль CSS, который с помощью трансформации
@@ -321,7 +325,7 @@ var onEffectLevelRadioChange = function () {
     for (var i = 0; i < DEEP_EFFECT.length; i++) {
       if (DEEP_EFFECT[i].name === effect) {
         var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
-        imgUploadPrewiev.style.filter = filterValue;
+        imgUploadPreview.style.filter = filterValue;
       }
     }
     effectLevelPin.style.left = effectLevelValue.value;
@@ -333,8 +337,8 @@ var onEffectsRadioClick = function () {
   for (var i = 0; i < effectsRadio.length; i++) {
     effectsRadio[i].addEventListener('click', function () {
       selectedEffect = findSelectedEffect();
-      imgUploadPrewiev.className = '';
-      imgUploadPrewiev.classList.add('effects__preview--' + selectedEffect);
+      imgUploadPreview.className = '';
+      imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
       onEffectLevelRadioChange();
       effectLevelValue.value = effectDeepControlMinValue;
     });
