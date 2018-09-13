@@ -71,7 +71,7 @@ var MAX_LIKES = 200;
 var COMMENTS_LENGTH = 10;
 var PHOTOS_LENGTH = 25;
 var SCALE_STEP = 25;
-var MIN_SCALE_CONTROL_VALUE = 0;
+var MIN_SCALE_CONTROL_VALUE = 25;
 var MAX_SCALE_CONTROL_VALUE = 100;
 var ESC_KEYCODE = 27;
 
@@ -118,16 +118,17 @@ var getComments = function () {
 var getDescription = function () {
   return descriptions[getRandomNumber(descriptions.length)];
 };
+var createPhotos = function () {
+  for (var i = 0; i < PHOTOS_LENGTH; i++) {
+    photos[i] = {};
+    photos[i].url = getUrl(i + 1);
+    photos[i].likes = getLikes();
+    photos[i].comments = getComments();
+    photos[i].description = getDescription();
 
-for (var i = 0; i < PHOTOS_LENGTH; i++) {
-  photos[i] = {};
-  photos[i].url = getUrl(i + 1);
-  photos[i].likes = getLikes();
-  photos[i].comments = getComments();
-  photos[i].description = getDescription();
-
-}
-
+  }
+};
+createPhotos();
 // На основе данных, созданных в предыдущем пункте и шаблона #picture создайте DOM-элементы, соответствующие фотографиям и заполните их данными из массива
 var pictureTemplate = document.querySelector('#picture')
   .content
@@ -146,7 +147,7 @@ var renderPhoto = function (photo) {
 var drawPictures = function () {
   var fragment = document.createDocumentFragment();
 
-  for (i = 0; i < photos.length; i++) {
+  for (var i = 0; i < photos.length; i++) {
     fragment.appendChild(renderPhoto(photos[i]));
   }
   pictures.appendChild(fragment);
@@ -170,7 +171,8 @@ var createBigPicture = function (CURRENT_PHOTO) {
   bigPicture.querySelector('.comments-count').textContent = photos[CURRENT_PHOTO].comments.length;
   bigPicture.querySelector('.social__caption').textContent = photos[CURRENT_PHOTO].description;
   bigPicture.querySelector('.big-picture__cancel').addEventListener('click', function () {
-    bigPicture.classList.add('hidden');
+    hideElements(bigPicture);
+    document.addEventListener('keydown', onBigPictureEsc);
   });
 
   var socialComments = bigPicture.querySelector('.social__comments');
@@ -180,7 +182,7 @@ var createBigPicture = function (CURRENT_PHOTO) {
 
   // удаление шаблонных элементов
   var currentSocialCommentsLength = socialComments.childElementCount;
-  for (i = currentSocialCommentsLength - 1; i >= 0; i--) {
+  for (var i = currentSocialCommentsLength - 1; i >= 0; i--) {
     socialComments.removeChild(socialComments.children[i]);
   }
 
@@ -190,8 +192,8 @@ var createBigPicture = function (CURRENT_PHOTO) {
     commentTemplate.querySelector('img').setAttribute('src', getAvatarUrl());
     return commentTemplate;
   };
-  for (i = 0; i < photos[CURRENT_PHOTO].comments.length; i++) {
-    commentFragment.appendChild(addCommentFragment(i));
+  for (var j = 0; j < photos[CURRENT_PHOTO].comments.length; j++) {
+    commentFragment.appendChild(addCommentFragment(j));
   }
   socialComments.appendChild(commentFragment);
 };
@@ -203,13 +205,20 @@ var onPicturesClick = function () {
   for (var i = 0; i < picturesLink.length; i++) {
     picturesLink[i].addEventListener('click', function (evnt) {
 
-      for (var i = 0; i < picturesLink.length; i++) {
-        if (picturesLink[i].querySelector('img') === evnt.target) {
-          createBigPicture(i);
+      for (var j = 0; j < picturesLink.length; j++) {
+        if (picturesLink[j].querySelector('img') === evnt.target) {
+          createBigPicture(j);
         }
       }
       showElement(bigPicture);
+      document.addEventListener('keydown', onBigPictureEsc);
     });
+  }
+};
+// закрыть bigPicture esc
+var onBigPictureEsc = function (evnt) {
+  if (evnt.keyCode === ESC_KEYCODE) {
+    hideElements(bigPicture);
   }
 };
 
@@ -218,7 +227,7 @@ onPicturesClick();
 // добавив им класс .visually-hidden.
 
 var hideElements = function (element) {
-  element.classList.add('visually-hidden');
+  element.classList.add('hidden');
 };
 
 hideElements(socialCommentCount);
@@ -228,20 +237,25 @@ hideElements(commentsLoader);
 var onDocumentPressESC = function (evnt) {
   if (evnt.keyCode === ESC_KEYCODE) {
     closeFileUpload();
-    imgUploadForm.reset();
   }
 };
 
 fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
-  document.addEventListener('keydown', onDocumentPressESC);
+  document.addEventListener('keydown', function (evnt) {
+    onDocumentPressESC(evnt);
+    imgUploadForm.reset();
+  });
 });
 
 
 // закрытие формы редактировония изображения
 var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', onDocumentPressESC);
+  document.removeEventListener('keydown', function (evnt) {
+    onDocumentPressESC(evnt);
+    imgUploadForm.reset();
+  });
 };
 imgUploadCancel.addEventListener('click', closeFileUpload);
 // 2. Редактирование изображения и ограничения, накладываемые на поля
@@ -263,7 +277,7 @@ var addScaleImgUploadPreview = function () {
 };
 //  При изменении значения поля .scale__control--value изображению .img-upload__preview должен добавляться
 // соответствующий стиль CSS, который с помощью трансформации
-// ?????????????????????????????????????????????????????????????????????????????????????????effect-level???????????????????????????????????????????????????????
+// ???????????????????????????????????????????????????????????????????????????????????????effect-level???????????????????????????????????????????????????????
 // задаёт масштаб. Например, если в поле
 // стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75)
 scaleControlSmaller.addEventListener('click', function () {
