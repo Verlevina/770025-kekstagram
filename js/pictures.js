@@ -298,13 +298,13 @@ scaleControlBigger.addEventListener('click', function () {
 
 // 2.2. Наложение эффекта на изображение:
 // список радио
-var effectsRadio = document.querySelectorAll('.effects__radio');
+var effectsRadio = imgUploadOverlay.querySelectorAll('.effects__radio');
 // инпут со значением глубины эффекта
-var effectLevelValue = document.querySelector('.effect-level__value');
+var effectLevelValue = imgUploadOverlay.querySelector('.effect-level__value');
 
 // поиск выбранного radiobutton и выбор эффекта
 var findSelectedEffect = function () {
-  var selectedEffectsRadio = document.querySelector('.effects__radio:checked');
+  var selectedEffectsRadio = imgUploadOverlay.querySelector('.effects__radio:checked');
   return (selectedEffectsRadio.id).slice(7);
 };
 // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта записывается в поле .scale__value
@@ -350,7 +350,7 @@ effectsRadio[0].addEventListener('click', closeFileUpload);
 // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта
 // записывается в поле .scale__value.
 
-var effectLevelPin = document.querySelector('.effect-level__pin');
+var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
 effectLevelPin.addEventListener('mouseup', function () {
   effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
