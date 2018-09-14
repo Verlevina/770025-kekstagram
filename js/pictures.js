@@ -238,6 +238,7 @@ hideElements(commentsLoader);
 var onDocumentPressESC = function (evnt) {
   if (evnt.keyCode === ESC_KEYCODE) {
     closeFileUpload();
+    imgUploadForm.reset();
   }
 };
 
@@ -245,7 +246,6 @@ fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', function (evnt) {
     onDocumentPressESC(evnt);
-    imgUploadForm.reset();
   });
 });
 
@@ -253,9 +253,9 @@ fileUploadControl.addEventListener('change', function () {
 // закрытие формы редактировония изображения
 var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
+  imgUploadForm.reset();
   document.removeEventListener('keydown', function (evnt) {
     onDocumentPressESC(evnt);
-    imgUploadForm.reset();
   });
 };
 imgUploadCancel.addEventListener('click', closeFileUpload);
@@ -356,4 +356,45 @@ effectLevelPin.addEventListener('mouseup', function () {
   effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
 
+// Хэштеги
+var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
+var imgUploadSubmit = imgUploadOverlay.querySelector('.img-upload__submit');
+function CustomValidation() { }
 
+CustomValidation.prototype = {
+  // Установим пустой массив сообщений об ошибках
+  invalidities: [],
+
+  // Метод, проверяющий валидность
+  checkValidity: function (input) {
+
+
+    if (!input.value.length < 3) {
+      this.addInvalidity('small');
+    }
+
+
+  },
+
+  // Добавляем сообщение об ошибке в массив ошибок
+  addInvalidity: function (message) {
+    this.invalidities.push(message);
+  },
+
+  // Получаем общий текст сообщений об ошибках
+  getInvalidities: function () {
+    return this.invalidities;
+  }
+};
+
+// Добавляем обработчик клика на кнопку отправки формы
+imgUploadSubmit.addEventListener('click', function () {
+  // Проверим валидность поля, используя встроенную в JavaScript функцию checkValidity()
+
+  var inputCustomValidation = new CustomValidation(); // Создадим объект CustomValidation
+  inputCustomValidation.checkValidity(textHashtags); // Выявим ошибки
+  var customValidityMessage = inputCustomValidation.getInvalidities(); // Получим все сообщения об ошибках
+  textHashtags.setCustomValidity(customValidityMessage); // Установим специальное сообщение об ошибке
+
+
+});
