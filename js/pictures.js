@@ -244,9 +244,7 @@ var onDocumentPressESC = function (evnt) {
 
 fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
-  document.addEventListener('keydown', function (evnt) {
-    onDocumentPressESC(evnt);
-  });
+  document.addEventListener('keydown', onDocumentPressESC);
 });
 
 
@@ -254,9 +252,7 @@ fileUploadControl.addEventListener('change', function () {
 var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
   imgUploadForm.reset();
-  document.removeEventListener('keydown', function (evnt) {
-    onDocumentPressESC(evnt);
-  });
+  document.removeEventListener('keydown', onDocumentPressESC);
 };
 imgUploadCancel.addEventListener('click', closeFileUpload);
 // 2. Редактирование изображения и ограничения, накладываемые на поля
@@ -356,21 +352,28 @@ effectLevelPin.addEventListener('mouseup', function () {
   effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
 
+
 // Хэштеги
 var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
 var imgUploadSubmit = imgUploadOverlay.querySelector('.img-upload__submit');
+// убираем обработчик нажатия на esc с document при submit
+imgUploadSubmit.addEventListener('submit', function () {
+  document.removeEventListener('keydown', onDocumentPressESC);
+});
 textHashtags.addEventListener('blur', function () {
   // чтоб предвыдущая ошибка не высвечивалась
   textHashtags.setCustomValidity('');
 });
 
 imgUploadSubmit.addEventListener('click', function () {
-  // сброс ошибок
-  textHashtags.setCustomValidity('');
-  // Установка специального сообщения об ошибке
-  var error = getInvalidMessage();
-  if (error) {
-    textHashtags.setCustomValidity(error);
+  if (textHashtags.value) {
+    // сброс ошибок
+    textHashtags.setCustomValidity('');
+    // Установка специального сообщения об ошибке
+    var error = getInvalidMessage();
+    if (error) {
+      textHashtags.setCustomValidity(error);
+    }
   }
 });
 // деление строки на хэштеги
