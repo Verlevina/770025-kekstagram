@@ -440,6 +440,9 @@ var getInvalidMessage = function () {
   if (hashtags.length >= MAX_HASHTAGS_QUANTITY) {
     return 'количество хэштегов не может быть больше ' + MAX_HASHTAGS_QUANTITY;
   }
+  if (quantity > MAX_HASTAG_LENGTH - 1 || quantity <= MIN_HASHTAGS_LENGTH) {
+    return 'длина хештега должна быть больше ' + MIN_HASHTAGS_LENGTH + ' и меньше ' + MAX_HASTAG_LENGTH;
+  }
 
   // одинаковые ли хэштеги
   for (var j = 0; j < hashtags.length; j++) {
@@ -453,9 +456,6 @@ var getInvalidMessage = function () {
     }
   }
 
-  if (quantity <= MIN_HASHTAGS_LENGTH) {
-    return 'длина хештега должна быть больше ' + MIN_HASHTAGS_LENGTH;
-  }
   textHashtags.value = hashtags;
   return false;
 };
