@@ -457,5 +457,6 @@ var getInvalidMessage = function () {
       }
     }
   }
+  textHashtags.value = hashtags.join(' ');
   return false;
 };
