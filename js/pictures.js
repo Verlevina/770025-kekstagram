@@ -238,13 +238,13 @@ hideElements(commentsLoader);
 var onDocumentPressESC = function (evnt) {
   if (evnt.keyCode === ESC_KEYCODE) {
     closeFileUpload();
-    imgUploadForm.reset();
   }
 };
 
 fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentPressESC);
+  imgUploadForm.reset();
 });
 
 
@@ -363,8 +363,17 @@ imgUploadSubmit.addEventListener('submit', function () {
 textHashtags.addEventListener('blur', function () {
   // чтоб предвыдущая ошибка не высвечивалась
   textHashtags.setCustomValidity('');
+  // если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования
+  // изображения.
+  document.addEventListener('keydown', onDocumentPressESC);
 });
-
+// если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования
+// изображения.
+textHashtags.addEventListener('focus', function () {
+  // если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования
+  // изображения.
+  document.removeEventListener('keydown', onDocumentPressESC);
+});
 imgUploadSubmit.addEventListener('click', function () {
   if (textHashtags.value) {
     // сброс ошибок
