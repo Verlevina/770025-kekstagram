@@ -384,12 +384,14 @@ imgUploadSubmit.addEventListener('click', function () {
   if (textHashtags.value) {
     // сброс ошибок
     textHashtags.setCustomValidity('');
+    textDescription.setCustomValidity('');
     // Установка специального сообщения об ошибке
     var error = getInvalidMessage();
     if (error) {
       textHashtags.setCustomValidity(error);
     }
   }
+
   if (textDescription.value.length > 140) {
     textDescription.setCustomValidity('длина сообщения не может быть больше 140 символов');
   }
@@ -455,7 +457,5 @@ var getInvalidMessage = function () {
       }
     }
   }
-
-  textHashtags.value = hashtags;
   return false;
 };
