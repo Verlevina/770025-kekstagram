@@ -396,6 +396,12 @@ imgUploadSubmit.addEventListener('click', function () {
     textDescription.setCustomValidity('длина сообщения не может быть больше 140 символов');
   }
 });
+textDescription.addEventListener('keydown', function () {
+  textDescription.setCustomValidity('');
+});
+textHashtags.addEventListener('keydown', function () {
+  textHashtags.setCustomValidity('');
+});
 // деление строки на хэштеги
 var getHashtags = function (hashtags) {
   return hashtags.split(' ');
