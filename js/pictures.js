@@ -359,12 +359,15 @@ effectLevelPin.addEventListener('mouseup', function () {
 // Хэштеги
 var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
 var imgUploadSubmit = imgUploadOverlay.querySelector('.img-upload__submit');
-
+textHashtags.addEventListener('blur', function () {
+  // чтоб предвыдущая ошибка не высвечивалась
+  textHashtags.setCustomValidity('');
+});
 
 imgUploadSubmit.addEventListener('click', function () {
   // сброс ошибок
   textHashtags.setCustomValidity('');
-  // Установим специальное сообщение об ошибке
+  // Установка специального сообщения об ошибке
   var error = getInvalidMessage();
   if (error) {
     textHashtags.setCustomValidity(error);
