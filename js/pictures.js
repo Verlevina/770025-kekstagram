@@ -359,42 +359,57 @@ effectLevelPin.addEventListener('mouseup', function () {
 // Хэштеги
 var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
 var imgUploadSubmit = imgUploadOverlay.querySelector('.img-upload__submit');
-function CustomValidation() { }
-
-CustomValidation.prototype = {
-  // Установим пустой массив сообщений об ошибках
-  invalidities: [],
-
-  // Метод, проверяющий валидность
-  checkValidity: function (input) {
 
 
-    if (!input.value.length < 3) {
-      this.addInvalidity('small');
-    }
-
-
-  },
-
-  // Добавляем сообщение об ошибке в массив ошибок
-  addInvalidity: function (message) {
-    this.invalidities.push(message);
-  },
-
-  // Получаем общий текст сообщений об ошибках
-  getInvalidities: function () {
-    return this.invalidities;
-  }
-};
-
-// Добавляем обработчик клика на кнопку отправки формы
 imgUploadSubmit.addEventListener('click', function () {
-  // Проверим валидность поля, используя встроенную в JavaScript функцию checkValidity()
-
-  var inputCustomValidation = new CustomValidation(); // Создадим объект CustomValidation
-  inputCustomValidation.checkValidity(textHashtags); // Выявим ошибки
-  var customValidityMessage = inputCustomValidation.getInvalidities(); // Получим все сообщения об ошибках
-  textHashtags.setCustomValidity(customValidityMessage); // Установим специальное сообщение об ошибке
-
-
+  // сброс ошибок
+  textHashtags.setCustomValidity('');
+  // Установим специальное сообщение об ошибке
+  var error = getInvalidMessage();
+  if (error) {
+    textHashtags.setCustomValidity(error);
+  }
 });
+// деление строки на хэштеги
+var getHashtags = function (hashtags) {
+  return hashtags.split(' ');
+};
+// проверяем валидность хэштегов
+var getInvalidMessage = function () {
+  var MAX_HASHTAGS_QUANTITY = 5;
+  var MAX_HASTAG_LENGTH = 20;
+  var MIN_HASHTAGS_LENGTH = 1;
+  var stringOfHashtags = textHashtags.value;
+  var isWhiteSpace = false;
+  var quantity = 0;
+  for (var i = 0; i < stringOfHashtags.length; i++) {
+    if (!isWhiteSpace) {
+      if (stringOfHashtags[i] !== '#') {
+        return 'каждый хэштег должен начинаться с # и быть разделен пробелом';
+      } else {
+
+        isWhiteSpace = true;
+      }
+    } else {
+      if (stringOfHashtags[i] === '#') {
+        return 'хэштег не может быть посередине слова';
+      }
+    }
+    quantity++;
+    if (stringOfHashtags[i] === ' ') {
+      if (quantity > MAX_HASTAG_LENGTH || quantity <= MIN_HASHTAGS_LENGTH) {
+        return 'длина хештега должна быть больше 1 и меньше ' + MAX_HASTAG_LENGTH;
+      }
+      quantity = 0;
+      isWhiteSpace = false;
+    }
+  }
+  var hashtags = getHashtags(stringOfHashtags);
+  if (hashtags.length >= MAX_HASHTAGS_QUANTITY) {
+    return 'количество хэштегов не может быть больше ' + MAX_HASHTAGS_QUANTITY;
+  }
+  if (quantity <= MIN_HASHTAGS_LENGTH) {
+    return 'длина хештега должна быть больше ' + MIN_HASHTAGS_LENGTH;
+  }
+  return false;
+};
