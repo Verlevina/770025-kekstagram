@@ -243,20 +243,16 @@ var onDocumentPressESC = function (evnt) {
 
 fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
-  document.addEventListener('keydown', function (evnt) {
-    onDocumentPressESC(evnt);
-    imgUploadForm.reset();
-  });
+  document.addEventListener('keydown', onDocumentPressESC);
+  // imgUploadForm.reset();
 });
 
 
 // закрытие формы редактировония изображения
 var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', function (evnt) {
-    onDocumentPressESC(evnt);
-    imgUploadForm.reset();
-  });
+  // imgUploadForm.reset();
+  document.removeEventListener('keydown', onDocumentPressESC);
 };
 imgUploadCancel.addEventListener('click', closeFileUpload);
 // 2. Редактирование изображения и ограничения, накладываемые на поля
@@ -357,3 +353,116 @@ effectLevelPin.addEventListener('mouseup', function () {
 });
 
 
+// Хэштеги
+var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
+var imgUploadSubmit = imgUploadOverlay.querySelector('.img-upload__submit');
+var textDescription = imgUploadOverlay.querySelector('.text__description');
+
+textHashtags.addEventListener('blur', function () {
+  // чтоб предвыдущая ошибка не высвечивалась
+  textHashtags.setCustomValidity('');
+  // если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования
+  // изображения.
+  document.addEventListener('keydown', onDocumentPressESC);
+});
+// если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования
+// изображения.
+textHashtags.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onDocumentPressESC);
+});
+
+// если фокус находится в поле ввода комментария, нажатие на Esc не должно приводить к закрытию формы редактирования
+// изображения.
+textDescription.addEventListener('focus', function () {
+  document.removeEventListener('keydown', onDocumentPressESC);
+});
+textDescription.addEventListener('blur', function () {
+  document.addEventListener('keydown', onDocumentPressESC);
+});
+
+imgUploadSubmit.addEventListener('click', function () {
+  if (textHashtags.value) {
+    // сброс ошибок
+    textHashtags.setCustomValidity('');
+    textDescription.setCustomValidity('');
+    // Установка специального сообщения об ошибке
+    var error = getInvalidMessage();
+    if (error) {
+      textHashtags.setCustomValidity(error);
+    }
+  }
+
+  if (textDescription.value.length > 140) {
+    textDescription.setCustomValidity('длина сообщения не может быть больше 140 символов');
+  }
+});
+textDescription.addEventListener('keydown', function () {
+  textDescription.setCustomValidity('');
+});
+textHashtags.addEventListener('keydown', function () {
+  textHashtags.setCustomValidity('');
+});
+// деление строки на хэштеги
+var getHashtags = function (hashtags) {
+  return hashtags.split(' ');
+};
+// хэштег в lowerCase
+var getStringInLowerCase = function (string) {
+  return string.toLowerCase();
+};
+
+
+// проверяем валидность хэштегов
+var getInvalidMessage = function () {
+  var MAX_HASHTAGS_QUANTITY = 5;
+  var MAX_HASTAG_LENGTH = 20;
+  var MIN_HASHTAGS_LENGTH = 1;
+  var stringOfHashtags = getStringInLowerCase(textHashtags.value);
+  var isWhiteSpace = false;
+  var quantity = 0;
+
+  for (var i = 0; i < stringOfHashtags.length; i++) {
+    if (!isWhiteSpace) {
+      if (stringOfHashtags[i] !== '#') {
+        return 'каждый хэштег должен начинаться с # и быть разделен пробелом';
+      } else {
+
+        isWhiteSpace = true;
+      }
+    } else {
+      if (stringOfHashtags[i] === '#') {
+        return 'хэштег не может быть посередине слова';
+      }
+    }
+    quantity++;
+    if (stringOfHashtags[i] === ' ') {
+      if (quantity > MAX_HASTAG_LENGTH - 1 || quantity <= MIN_HASHTAGS_LENGTH) {
+        return 'длина хештега должна быть больше ' + MIN_HASHTAGS_LENGTH + ' и меньше ' + MAX_HASTAG_LENGTH;
+      }
+      quantity = 0;
+      isWhiteSpace = false;
+    }
+  }
+  var hashtags = getHashtags(stringOfHashtags);
+
+  if (hashtags.length >= MAX_HASHTAGS_QUANTITY) {
+    return 'количество хэштегов не может быть больше ' + MAX_HASHTAGS_QUANTITY;
+  }
+  if (quantity > MAX_HASTAG_LENGTH - 1 || quantity <= MIN_HASHTAGS_LENGTH) {
+    return 'длина хештега должна быть больше ' + MIN_HASHTAGS_LENGTH + ' и меньше ' + MAX_HASTAG_LENGTH;
+  }
+
+  // одинаковые ли хэштеги
+  for (var j = 0; j < hashtags.length; j++) {
+    for (var k = hashtags.length - 1; k > j; k--) {
+      if (j === k) {
+        continue;
+      }
+      if (hashtags[j] === hashtags[k]) {
+        return 'хэштеги не могут быть одинаковыми';
+      }
+    }
+  }
+  textHashtags.value = hashtags.join(' ');
+  return false;
+};
