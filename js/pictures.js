@@ -340,15 +340,13 @@ var changeDeepOfEffect = function () {
       imgUploadPreview.style.filter = filterValue;
     }
   }
-  effectLevelPin.style.left = effectLevelValue.value;
 };
-
 
 // drag and drop
 var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
+var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
 effectLevelPin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
   var startCoorinateX = evt.clientX;
   var effectiveLevelLineWidth = getComputedStyle(effectLevelLine).width;
   var effectiveLevelLineWidthNumber = +deleteDimension(effectiveLevelLineWidth);
@@ -376,14 +374,9 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
     document.removeEventListener('mouseup', onMouseUp);
     changeDeepOfEffect();
   };
-
-
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-
-
 });
-
 
 // клик по радио
 var onEffectsRadioClick = function () {
@@ -392,13 +385,15 @@ var onEffectsRadioClick = function () {
       selectedEffect = findSelectedEffect();
       imgUploadPreview.className = '';
       imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
-      effectLevelValue.value = effectDeepControlMinValue;
-      effectLevelPin.style.left = (coordinateX - minCoordinateX) + 'px';
+      effectLevelValue.value = effectDeepControlMaxValue;
+      effectLevelPin.style.left = effectDeepControlMaxValue + '%';
       effectLevelDepth.style.width = effectLevelPin.style.left;
+      changeDeepOfEffect();
     });
   }
 };
 onEffectsRadioClick();
+
 // При выборе эффекта «Оригинал» слайдер скрывается.
 
 effectsRadio[0].addEventListener('click', closeFileUpload);
