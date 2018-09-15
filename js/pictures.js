@@ -74,6 +74,20 @@ var SCALE_STEP = 25;
 var MIN_SCALE_CONTROL_VALUE = 25;
 var MAX_SCALE_CONTROL_VALUE = 100;
 var ESC_KEYCODE = 27;
+var PX = 'px';
+var PERCENT = '%';
+
+// функция, обрезающая проценты и писксели
+var deleteDimension = function (value) {
+  if (value.slice(-2) == 'px') {
+    return value.slice(0, -2);
+  }
+  if (value.slice(-1) == '%') {
+    return value.slice(0, -1);
+  }
+  return false;
+};
+
 
 // Создайте массив, состоящий из 25 сгенерированных JS объектов, которые будут описывать фотографии, размещённые другими пользователями:
 var getRandomNumber = function (max, min, isFor) {
@@ -312,21 +326,64 @@ var calculateCurrentDeepEffect = function (effectObject) {
 };
 
 // 2.2. Наложение эффекта на изображение:
+var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
 var selectedEffect = findSelectedEffect();
-var onEffectLevelRadioChange = function () {
 
-  effectLevelValue.addEventListener('change', function () {
+
+var changeDeepOfEffect = function () {
+  // effectLevelValue.addEventListener('change', function () {
   // document.querySelector('.img-upload__effect-level').addEventListener('click', function () {
-    var effect = findSelectedEffect();
-    for (var i = 0; i < DEEP_EFFECT.length; i++) {
-      if (DEEP_EFFECT[i].name === effect) {
-        var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
-        imgUploadPreview.style.filter = filterValue;
-      }
+  var effect = findSelectedEffect();
+  for (var i = 0; i < DEEP_EFFECT.length; i++) {
+    if (DEEP_EFFECT[i].name === effect) {
+      var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
+      imgUploadPreview.style.filter = filterValue;
     }
-    effectLevelPin.style.left = effectLevelValue.value;
-  });
+  }
+  effectLevelPin.style.left = effectLevelValue.value;
 };
+
+
+// drag and drop
+var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
+effectLevelPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
+  var startCoorinateX = evt.clientX;
+  var effectiveLevelLineWidth = getComputedStyle(effectLevelLine).width;
+  var effectiveLevelLineWidthNumber = +deleteDimension(effectiveLevelLineWidth);
+  var coeff = effectiveLevelLineWidthNumber / 100;
+  var minCoordinateX = startCoorinateX - +deleteDimension(getComputedStyle(effectLevelPin).left);
+  var maxCoordinateX = minCoordinateX + effectiveLevelLineWidthNumber;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var coordinateX = moveEvt.clientX;
+    if (coordinateX <= minCoordinateX) {
+      coordinateX = minCoordinateX;
+    }
+    if (coordinateX >= maxCoordinateX) {
+      coordinateX = maxCoordinateX;
+    }
+    effectLevelPin.style.left = (coordinateX - minCoordinateX) + 'px';
+    effectLevelDepth.style.width = effectLevelPin.style.left;
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    effectLevelValue.value = +deleteDimension(effectLevelPin.style.left) / coeff;
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    changeDeepOfEffect();
+  };
+
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
+
+});
+
 
 // клик по радио
 var onEffectsRadioClick = function () {
@@ -335,8 +392,9 @@ var onEffectsRadioClick = function () {
       selectedEffect = findSelectedEffect();
       imgUploadPreview.className = '';
       imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
-      onEffectLevelRadioChange();
       effectLevelValue.value = effectDeepControlMinValue;
+      effectLevelPin.style.left = (coordinateX - minCoordinateX) + 'px';
+      effectLevelDepth.style.width = effectLevelPin.style.left;
     });
   }
 };
@@ -347,7 +405,7 @@ effectsRadio[0].addEventListener('click', closeFileUpload);
 // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта
 // записывается в поле .scale__value.
 
-var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
+
 effectLevelPin.addEventListener('mouseup', function () {
   effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
