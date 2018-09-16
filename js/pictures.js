@@ -346,7 +346,7 @@ var changeDeepOfEffect = function () {
 var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
 var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
 effectLevelPin.addEventListener('mousedown', function (evt) {
-  evt.preventDefault();
+//  evt.preventDefault();
   var startCoorinateX = evt.clientX;
   var effectiveLevelLineWidth = getComputedStyle(effectLevelLine).width;
   var effectiveLevelLineWidthNumber = +deleteDimension(effectiveLevelLineWidth);
@@ -355,7 +355,7 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
   var maxCoordinateX = minCoordinateX + effectiveLevelLineWidthNumber;
 
   var onMouseMove = function (moveEvt) {
-    moveEvt.preventDefault();
+    //    moveEvt.preventDefault();
     var coordinateX = moveEvt.clientX;
     if (coordinateX <= minCoordinateX) {
       coordinateX = minCoordinateX;
@@ -363,13 +363,13 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
     if (coordinateX >= maxCoordinateX) {
       coordinateX = maxCoordinateX;
     }
-    effectLevelPin.style.left = (coordinateX - minCoordinateX) + 'px';
+    effectLevelPin.style.left = (coordinateX - minCoordinateX) / coeff + '%';
     effectLevelDepth.style.width = effectLevelPin.style.left;
   };
 
   var onMouseUp = function (upEvt) {
-    upEvt.preventDefault();
-    effectLevelValue.value = +deleteDimension(effectLevelPin.style.left) / coeff;
+    //   upEvt.preventDefault();
+    effectLevelValue.value = +deleteDimension(effectLevelPin.style.left);
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
     changeDeepOfEffect();
