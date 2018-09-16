@@ -369,7 +369,7 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
 
   var onMouseUp = function (upEvt) {
     //   upEvt.preventDefault();
-    effectLevelValue.value = +deleteDimension(effectLevelPin.style.left);
+    effectLevelValue.value = Math.ceil(+deleteDimension(effectLevelPin.style.left));
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
     changeDeepOfEffect();
