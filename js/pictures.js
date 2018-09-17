@@ -11,7 +11,7 @@ var photos = [];
 // максимальное значение input, хранящего текущую глубину эффекта
 var effectDeepControlMaxValue = 100;
 var effectDeepControlMinValue = 0;
-// var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelLine = document.querySelector('.effect-level__line');
 // форма загрузки фото
 var imgUploadForm = document.querySelector('.img-upload__form');
 //  объект со шкалой глубин эффектов фотто
@@ -74,6 +74,20 @@ var SCALE_STEP = 25;
 var MIN_SCALE_CONTROL_VALUE = 25;
 var MAX_SCALE_CONTROL_VALUE = 100;
 var ESC_KEYCODE = 27;
+var PX = 'px';
+var PERCENT = '%';
+
+// функция, обрезающая проценты и писксели
+var deleteDimension = function (value) {
+  if (value.slice(-2) === PX) {
+    return value.slice(0, -2);
+  }
+  if (value.slice(-1) === PERCENT) {
+    return value.slice(0, -1);
+  }
+  return false;
+};
+
 
 // Создайте массив, состоящий из 25 сгенерированных JS объектов, которые будут описывать фотографии, размещённые другими пользователями:
 var getRandomNumber = function (max, min, isFor) {
@@ -244,14 +258,13 @@ var onDocumentPressESC = function (evnt) {
 fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentPressESC);
-  // imgUploadForm.reset();
 });
 
 
 // закрытие формы редактировония изображения
 var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
-  // imgUploadForm.reset();
+  imgUploadForm.reset();
   document.removeEventListener('keydown', onDocumentPressESC);
 };
 imgUploadCancel.addEventListener('click', closeFileUpload);
@@ -278,17 +291,17 @@ var addScaleImgUploadPreview = function () {
 // задаёт масштаб. Например, если в поле
 // стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75)
 scaleControlSmaller.addEventListener('click', function () {
-  scaleControlValue.value = (getScaleControlValue() - SCALE_STEP) + '%';
+  scaleControlValue.value = (getScaleControlValue() - SCALE_STEP) + PERCENT;
   if (getScaleControlValue() <= MIN_SCALE_CONTROL_VALUE) {
-    scaleControlValue.value = MIN_SCALE_CONTROL_VALUE + '%';
+    scaleControlValue.value = MIN_SCALE_CONTROL_VALUE + PERCENT;
   }
   addScaleImgUploadPreview();
 });
 
 scaleControlBigger.addEventListener('click', function () {
-  scaleControlValue.value = (getScaleControlValue() + SCALE_STEP) + '%';
+  scaleControlValue.value = (getScaleControlValue() + SCALE_STEP) + PERCENT;
   if (getScaleControlValue() >= MAX_SCALE_CONTROL_VALUE) {
-    scaleControlValue.value = MAX_SCALE_CONTROL_VALUE + '%';
+    scaleControlValue.value = MAX_SCALE_CONTROL_VALUE + PERCENT;
   }
   addScaleImgUploadPreview();
 });
@@ -312,44 +325,93 @@ var calculateCurrentDeepEffect = function (effectObject) {
 };
 
 // 2.2. Наложение эффекта на изображение:
+var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
 var selectedEffect = findSelectedEffect();
-var onEffectLevelRadioChange = function () {
 
-  effectLevelValue.addEventListener('change', function () {
+
+var changeDeepOfEffect = function () {
+  // effectLevelValue.addEventListener('change', function () {
   // document.querySelector('.img-upload__effect-level').addEventListener('click', function () {
-    var effect = findSelectedEffect();
-    for (var i = 0; i < DEEP_EFFECT.length; i++) {
-      if (DEEP_EFFECT[i].name === effect) {
-        var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
-        imgUploadPreview.style.filter = filterValue;
-      }
+  var effect = findSelectedEffect();
+  for (var i = 0; i < DEEP_EFFECT.length; i++) {
+    if (DEEP_EFFECT[i].name === effect) {
+      var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
+      imgUploadPreview.style.filter = filterValue;
     }
-    effectLevelPin.style.left = effectLevelValue.value;
-  });
+  }
 };
 
+// drag and drop
+
+var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
+var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
+effectLevelPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  var startCoorinateX = evt.clientX;
+  var effectiveLevelLineWidth = getComputedStyle(effectLevelLine).width;
+  var effectiveLevelLineWidthNumber = +deleteDimension(effectiveLevelLineWidth);
+  var coeff = effectiveLevelLineWidthNumber / 100;
+  var minCoordinateX = startCoorinateX - +deleteDimension(getComputedStyle(effectLevelPin).left);
+  var maxCoordinateX = minCoordinateX + effectiveLevelLineWidthNumber;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var coordinateX = moveEvt.clientX;
+    if (coordinateX <= minCoordinateX) {
+      coordinateX = minCoordinateX;
+    }
+    if (coordinateX >= maxCoordinateX) {
+      coordinateX = maxCoordinateX;
+    }
+    effectLevelPin.style.left = (coordinateX - minCoordinateX) / coeff + PERCENT;
+    effectLevelDepth.style.width = effectLevelPin.style.left;
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    effectLevelValue.value = Math.ceil(+deleteDimension(effectLevelPin.style.left));
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    changeDeepOfEffect();
+  };
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
+
 // клик по радио
+var imgUploadEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
 var onEffectsRadioClick = function () {
-  for (var i = 0; i < effectsRadio.length; i++) {
+  for (var i = 1; i < effectsRadio.length; i++) {
     effectsRadio[i].addEventListener('click', function () {
+      imgUploadEffectLevel.classList.remove('hidden');
       selectedEffect = findSelectedEffect();
       imgUploadPreview.className = '';
       imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
-      onEffectLevelRadioChange();
-      effectLevelValue.value = effectDeepControlMinValue;
+      effectLevelValue.value = effectDeepControlMaxValue;
+      effectLevelPin.style.left = effectDeepControlMaxValue + '%';
+      effectLevelDepth.style.width = effectLevelPin.style.left;
+      changeDeepOfEffect();
     });
   }
 };
 onEffectsRadioClick();
+
 // При выборе эффекта «Оригинал» слайдер скрывается.
 
-effectsRadio[0].addEventListener('click', closeFileUpload);
+
+effectsRadio[0].addEventListener('click', function () {
+  imgUploadEffectLevel.classList.add('hidden');
+  imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
+  effectLevelValue.value = effectDeepControlMinValue;
+  imgUploadPreview.style.filter = 'none';
+});
+
 // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта
 // записывается в поле .scale__value.
 
-var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
+
 effectLevelPin.addEventListener('mouseup', function () {
-  effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
+  effectLevelLine.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
 
 
@@ -370,7 +432,9 @@ textHashtags.addEventListener('blur', function () {
 textHashtags.addEventListener('focus', function () {
   document.removeEventListener('keydown', onDocumentPressESC);
 });
-
+textDescription.addEventListener('blur', function () {
+  document.addEventListener('keydown', onDocumentPressESC);
+});
 // если фокус находится в поле ввода комментария, нажатие на Esc не должно приводить к закрытию формы редактирования
 // изображения.
 textDescription.addEventListener('focus', function () {
