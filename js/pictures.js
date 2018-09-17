@@ -432,7 +432,9 @@ textHashtags.addEventListener('blur', function () {
 textHashtags.addEventListener('focus', function () {
   document.removeEventListener('keydown', onDocumentPressESC);
 });
-
+textDescription.addEventListener('blur', function () {
+  document.addEventListener('keydown', onDocumentPressESC);
+});
 // если фокус находится в поле ввода комментария, нажатие на Esc не должно приводить к закрытию формы редактирования
 // изображения.
 textDescription.addEventListener('focus', function () {
