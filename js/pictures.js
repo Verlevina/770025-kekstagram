@@ -11,7 +11,7 @@ var photos = [];
 // максимальное значение input, хранящего текущую глубину эффекта
 var effectDeepControlMaxValue = 100;
 var effectDeepControlMinValue = 0;
-// var effectLevelLine = document.querySelector('.effect-level__line');
+var effectLevelLine = document.querySelector('.effect-level__line');
 // форма загрузки фото
 var imgUploadForm = document.querySelector('.img-upload__form');
 //  объект со шкалой глубин эффектов фотто
@@ -79,10 +79,10 @@ var PERCENT = '%';
 
 // функция, обрезающая проценты и писксели
 var deleteDimension = function (value) {
-  if (value.slice(-2) == 'px') {
+  if (value.slice(-2) === PX) {
     return value.slice(0, -2);
   }
-  if (value.slice(-1) == '%') {
+  if (value.slice(-1) === PERCENT) {
     return value.slice(0, -1);
   }
   return false;
@@ -258,14 +258,13 @@ var onDocumentPressESC = function (evnt) {
 fileUploadControl.addEventListener('change', function () {
   imgUploadOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onDocumentPressESC);
-  // imgUploadForm.reset();
 });
 
 
 // закрытие формы редактировония изображения
 var closeFileUpload = function () {
   imgUploadOverlay.classList.add('hidden');
-  // imgUploadForm.reset();
+  imgUploadForm.reset();
   document.removeEventListener('keydown', onDocumentPressESC);
 };
 imgUploadCancel.addEventListener('click', closeFileUpload);
@@ -292,17 +291,17 @@ var addScaleImgUploadPreview = function () {
 // задаёт масштаб. Например, если в поле
 // стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75)
 scaleControlSmaller.addEventListener('click', function () {
-  scaleControlValue.value = (getScaleControlValue() - SCALE_STEP) + '%';
+  scaleControlValue.value = (getScaleControlValue() - SCALE_STEP) + PERCENT;
   if (getScaleControlValue() <= MIN_SCALE_CONTROL_VALUE) {
-    scaleControlValue.value = MIN_SCALE_CONTROL_VALUE + '%';
+    scaleControlValue.value = MIN_SCALE_CONTROL_VALUE + PERCENT;
   }
   addScaleImgUploadPreview();
 });
 
 scaleControlBigger.addEventListener('click', function () {
-  scaleControlValue.value = (getScaleControlValue() + SCALE_STEP) + '%';
+  scaleControlValue.value = (getScaleControlValue() + SCALE_STEP) + PERCENT;
   if (getScaleControlValue() >= MAX_SCALE_CONTROL_VALUE) {
-    scaleControlValue.value = MAX_SCALE_CONTROL_VALUE + '%';
+    scaleControlValue.value = MAX_SCALE_CONTROL_VALUE + PERCENT;
   }
   addScaleImgUploadPreview();
 });
@@ -364,7 +363,7 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
     if (coordinateX >= maxCoordinateX) {
       coordinateX = maxCoordinateX;
     }
-    effectLevelPin.style.left = (coordinateX - minCoordinateX) / coeff + '%';
+    effectLevelPin.style.left = (coordinateX - minCoordinateX) / coeff + PERCENT;
     effectLevelDepth.style.width = effectLevelPin.style.left;
   };
 
@@ -403,7 +402,7 @@ onEffectsRadioClick();
 effectsRadio[0].addEventListener('click', function () {
   imgUploadEffectLevel.classList.add('hidden');
   imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
-  effectLevelValue.value = 0;
+  effectLevelValue.value = effectDeepControlMinValue;
   imgUploadPreview.style.filter = 'none';
 });
 
