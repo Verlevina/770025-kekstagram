@@ -343,10 +343,11 @@ var changeDeepOfEffect = function () {
 };
 
 // drag and drop
+
 var effectLevelLine = imgUploadOverlay.querySelector('.effect-level__line');
 var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
 effectLevelPin.addEventListener('mousedown', function (evt) {
-//  evt.preventDefault();
+  evt.preventDefault();
   var startCoorinateX = evt.clientX;
   var effectiveLevelLineWidth = getComputedStyle(effectLevelLine).width;
   var effectiveLevelLineWidthNumber = +deleteDimension(effectiveLevelLineWidth);
@@ -355,7 +356,7 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
   var maxCoordinateX = minCoordinateX + effectiveLevelLineWidthNumber;
 
   var onMouseMove = function (moveEvt) {
-    //    moveEvt.preventDefault();
+    moveEvt.preventDefault();
     var coordinateX = moveEvt.clientX;
     if (coordinateX <= minCoordinateX) {
       coordinateX = minCoordinateX;
@@ -368,7 +369,7 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
   };
 
   var onMouseUp = function (upEvt) {
-    //   upEvt.preventDefault();
+    upEvt.preventDefault();
     effectLevelValue.value = Math.ceil(+deleteDimension(effectLevelPin.style.left));
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
@@ -379,9 +380,11 @@ effectLevelPin.addEventListener('mousedown', function (evt) {
 });
 
 // клик по радио
+var imgUploadEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
 var onEffectsRadioClick = function () {
-  for (var i = 0; i < effectsRadio.length; i++) {
+  for (var i = 1; i < effectsRadio.length; i++) {
     effectsRadio[i].addEventListener('click', function () {
+      imgUploadEffectLevel.classList.remove('hidden');
       selectedEffect = findSelectedEffect();
       imgUploadPreview.className = '';
       imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
@@ -396,13 +399,20 @@ onEffectsRadioClick();
 
 // При выборе эффекта «Оригинал» слайдер скрывается.
 
-effectsRadio[0].addEventListener('click', closeFileUpload);
+
+effectsRadio[0].addEventListener('click', function () {
+  imgUploadEffectLevel.classList.add('hidden');
+  imgUploadPreview.classList.add('effects__preview--' + selectedEffect);
+  effectLevelValue.value = 0;
+  imgUploadPreview.style.filter = 'none';
+});
+
 // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта
 // записывается в поле .scale__value.
 
 
 effectLevelPin.addEventListener('mouseup', function () {
-  effectLevelValue.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
+  effectLevelLine.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
 });
 
 
