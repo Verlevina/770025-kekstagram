@@ -13,7 +13,7 @@ window.util = (function () {
     // закрыть bigPicture esc
     onBigPictureEsc: function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {
-        window.util.hideElements(window.bigPicture);
+        window.util.hideElements(window.util.bigPicture);
       }
     },
   };
