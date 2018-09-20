@@ -21,10 +21,6 @@
     .querySelector('.error');
   var errorMessage = loadErrorMessageTemplate.cloneNode(true);
 
-  var onOverlayMessageClick = function () {
-
-  };
-
 
   window.loadMessages = {
 
@@ -106,6 +102,7 @@
       };
 
       errorButtonTryAgain.addEventListener('click', onButtonTryAgainClick);
+
       var onErrorButtonApplyAnotherFileClick = function () {
         errorButtonApplyAnotherFile.removeEventListener('click', onErrorButtonApplyAnotherFileClick);
         document.removeEventListener('keyup', onDocumentPressEsc);
