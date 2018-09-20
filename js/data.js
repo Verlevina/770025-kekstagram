@@ -1,5 +1,5 @@
 'use strict';
-window.data = (function () {
+(function () {
   var comments = [
     'Всё отлично!',
     'В целом всё неплохо. Но не всё.',
@@ -35,7 +35,7 @@ window.data = (function () {
       return Math.ceil(Math.random() * (max - min) + min);
     }
   };
-  return {
+  window.data = {
     PHOTOS_LENGTH: 25,
     getUrl: function (i) {
       return 'photos/' + i + '.jpg';

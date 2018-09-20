@@ -15,13 +15,15 @@
   };
 
   // Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
-  window.drawPictures = function (photos) {
-    var fragment = document.createDocumentFragment();
+  window.pictures = {
+    drawPictures: function (photos) {
+      var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < photos.length; i++) {
-      fragment.appendChild(renderPhoto(photos[i]));
+      for (var i = 0; i < photos.length; i++) {
+        fragment.appendChild(renderPhoto(photos[i]));
+      }
+      pictures.appendChild(fragment);
     }
-    pictures.appendChild(fragment);
   };
 
 })();

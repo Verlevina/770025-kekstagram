@@ -16,7 +16,7 @@
   photos = createPhotos();
 
 
-  window.drawPictures(photos);
+  window.pictures.drawPictures(photos);
   // обработчики клика на все фотографии, который показывает bigPicture
   var picturesLink = document.querySelectorAll('.picture');
   var onPicturesClick = function () {
