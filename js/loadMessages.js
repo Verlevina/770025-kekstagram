@@ -85,9 +85,9 @@
 
       var onDocumentPressEsc = function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
+          document.removeEventListener('keyup', onDocumentPressEsc);
           window.loadMessages.deleteErrorMessage();
           window.form.imgUploadForm.reset();
-          document.removeEventListener('keyup', onDocumentPressEsc);
         }
       };
       document.addEventListener('keyup', onDocumentPressEsc);
