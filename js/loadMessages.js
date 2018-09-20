@@ -95,6 +95,7 @@
 
       var onButtonTryAgainClick = function () {
         errorButtonTryAgain.removeEventListener('click', onButtonTryAgainClick);
+        errorMessage.removeEventListener('click', onErrorMessageClick);
         document.removeEventListener('keyup', onDocumentPressEsc);
         window.loadMessages.deleteErrorMessage();
         window.util.showElements(window.form.imgUploadOverlay);
@@ -105,6 +106,7 @@
 
       var onErrorButtonApplyAnotherFileClick = function () {
         errorButtonApplyAnotherFile.removeEventListener('click', onErrorButtonApplyAnotherFileClick);
+        errorMessage.removeEventListener('click', onErrorMessageClick);
         document.removeEventListener('keyup', onDocumentPressEsc);
         window.loadMessages.deleteErrorMessage();
         window.form.imgUploadForm.reset();
