@@ -371,6 +371,7 @@
       window.loadMessages.deleteOnLoadMessage();
       window.util.hideElements(window.form.imgUploadOverlay);
       window.loadMessages.onLoadSuccessMessage();
+      window.form.imgUploadForm.reset();
     };
     var onError = function () {
       window.loadMessages.deleteOnLoadMessage();

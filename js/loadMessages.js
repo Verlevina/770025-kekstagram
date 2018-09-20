@@ -36,9 +36,10 @@
     },
     onLoadSuccessMessage: function () {
       window.loadMessages.addMessage(successMessage);
+      var button = successMessage.querySelector('button');
       var successInner = document.querySelector('.success__inner');
       var onSuccessMessageClick = function (evt) {
-        if (evt.target !== successInner) {
+        if (evt.target !== successInner && evt.target !== button) {
           errorMessage.removeEventListener('click', onSuccessMessageClick);
           window.loadMessages.deleteSuccessMessage();
           window.form.imgUploadForm.reset();
@@ -56,11 +57,15 @@
 
       successMessage.addEventListener('click', onSuccessMessageClick);
 
-      var button = successMessage.querySelector('button');
+
       var onButtonClick = function () {
+        errorMessage.removeEventListener('click', onSuccessMessageClick);
         window.loadMessages.deleteSuccessMessage();
         window.form.imgUploadForm.reset();
+
+        document.removeEventListener('keyup', onDocumentPressEsc);
         button.removeEventListener('click', onButtonClick);
+
       };
       button.addEventListener('click', onButtonClick);
     },
@@ -70,9 +75,11 @@
 
     onLoadErrorMessage: function () {
       window.loadMessages.addMessage(errorMessage);
+      var errorButtonTryAgain = errorMessage.querySelector('button:first-child');
+      var errorButtonApplyAnotherFile = errorMessage.querySelector('button:last-child');
       var errorInner = document.querySelector('.error__inner');
       var onErrorMessageClick = function (evt) {
-        if (evt.target !== errorInner) {
+        if (evt.target !== errorInner && evt.target !== errorButtonTryAgain && evt.target !== errorButtonApplyAnotherFile) {
           errorMessage.removeEventListener('click', onErrorMessageClick);
           window.loadMessages.deleteErrorMessage();
           window.form.imgUploadForm.reset();
@@ -89,10 +96,10 @@
       };
       document.addEventListener('keyup', onDocumentPressEsc);
 
-      var errorButtonTryAgain = errorMessage.querySelector('button:first-child');
-      var errorButtonApplyAnotherFile = errorMessage.querySelector('button:last-child');
+
       var onButtonTryAgainClick = function () {
         errorButtonTryAgain.removeEventListener('click', onButtonTryAgainClick);
+        document.removeEventListener('keyup', onDocumentPressEsc);
         window.loadMessages.deleteErrorMessage();
         window.util.showElements(window.form.imgUploadOverlay);
 
@@ -101,6 +108,7 @@
       errorButtonTryAgain.addEventListener('click', onButtonTryAgainClick);
       var onErrorButtonApplyAnotherFileClick = function () {
         errorButtonApplyAnotherFile.removeEventListener('click', onErrorButtonApplyAnotherFileClick);
+        document.removeEventListener('keyup', onDocumentPressEsc);
         window.loadMessages.deleteErrorMessage();
         window.form.imgUploadForm.reset();
 
