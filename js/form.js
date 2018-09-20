@@ -233,7 +233,13 @@
   effectLevelPin.addEventListener('mouseup', function () {
     effectLevelLine.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
   });
-
+  // красная рамка у элемента с неверно введенным значением
+  var drawRedBorder = function (element) {
+    element.style = 'border-color:red;';
+  };
+  var deleteStyle = function (element) {
+    element.style = '';
+  };
 
   // Хэштеги
   var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
@@ -273,11 +279,17 @@
       var error = getInvalidMessage();
       if (error) {
         textHashtags.setCustomValidity(error);
+        drawRedBorder(textHashtags);
+      } else {
+        deleteStyle(textHashtags);
       }
     }
 
     if (textDescription.value.length > 140) {
       textDescription.setCustomValidity('длина сообщения не может быть больше 140 символов');
+      drawRedBorder(textDescription);
+    } else {
+      deleteStyle(textDescription);
     }
   });
   textDescription.addEventListener('keydown', function () {
@@ -351,4 +363,23 @@
     return false;
   };
 
+
+  // ajax оправка формы
+  imgUploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var onLoad = function () {
+      window.loadMessages.deleteOnLoadMessage();
+      window.util.hideElements(imgUploadOverlay);
+      window.loadMessages.onLoadSuccessMessage();
+    };
+    var onError = function () {
+      window.loadMessages.deleteOnLoadMessage();
+      window.util.hideElements(imgUploadOverlay);
+      window.loadMessages.onLoadErrorMessage();
+
+    };
+    var form = new FormData(imgUploadForm);
+    window.upload(form, onLoad, onError);
+
+  });
 })();

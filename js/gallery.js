@@ -1,30 +1,31 @@
 'use strict';
 (function () {
-  var photos = [];
-  var createPhotos = function () {
-    for (var i = 0; i < window.data.PHOTOS_LENGTH; i++) {
-      photos[i] = {};
-      photos[i].url = window.data.getUrl(i + 1);
-      photos[i].likes = window.data.getLikes();
-      photos[i].comments = window.data.getComments();
-      photos[i].description = window.data.getDescription();
+  // var photos = [];
+  // var createPhotos = function () {
+  //   for (var i = 0; i < window.data.PHOTOS_LENGTH; i++) {
+  //     photos[i] = {};
+  //     photos[i].url = window.data.getUrl(i + 1);
+  //     photos[i].likes = window.data.getLikes();
+  //     photos[i].comments = window.data.getComments();
+  //     photos[i].description = window.data.getDescription();
+  //
+  //   }
+  //   return photos;
+  // };
+  //
+  // photos = createPhotos();
 
-    }
-    return photos;
-  };
 
-  photos = createPhotos();
-
-
-  window.pictures.drawPictures(photos);
   // обработчики клика на все фотографии, который показывает bigPicture
-  var picturesLink = document.querySelectorAll('.picture');
-  var onPicturesClick = function () {
+
+
+  var onPicturesClick = function (photos) {
+    var picturesLink = document.querySelectorAll('.picture__img');
     for (var i = 0; i < picturesLink.length; i++) {
       picturesLink[i].addEventListener('click', function (evt) {
 
         for (var j = 0; j < picturesLink.length; j++) {
-          if (picturesLink[j].querySelector('img') === evt.target) {
+          if (picturesLink[j] === evt.target) {
             window.createBigPicture(j, photos);
           }
         }
@@ -33,6 +34,16 @@
       });
     }
   };
+  // получение данных с сервера
+  var onLoad = function (photos) {
+    console.dir(photos);
+    window.pictures.drawPictures(photos);
+    onPicturesClick(photos);
+  };
+  var onError = function () {
 
-  onPicturesClick();
+  };
+  window.load(onLoad, onError);
+
+
 })();
