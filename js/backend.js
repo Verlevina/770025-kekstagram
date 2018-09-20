@@ -33,6 +33,6 @@
       }
     });
 
-    xhr.send(data);
+    xhr.send();
   };
 })();
