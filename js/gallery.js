@@ -36,7 +36,6 @@
   };
   // получение данных с сервера
   var onLoad = function (photos) {
-    console.dir(photos);
     window.pictures.drawPictures(photos);
     onPicturesClick(photos);
   };
