@@ -39,9 +39,13 @@
     window.pictures.drawPictures(photos);
     onPicturesClick(photos);
   };
-  var onError = function () {
-    alert('тут что-то должно происходить, так как при загрузке изображений произошла ошибка, а в ТЗ не очень' +
-      ' доходчиво описано, что должна выполнять эта функция');
+  var onError = function (message) {
+    window.loadMessages.onLoadMessage(false, message);
+    window.loadMessages.addLoadMessage();
+    setTimeout(function () {
+      window.loadMessages.deleteOnLoadMessage();
+    }, 5000);
+
   };
   window.load(onLoad, onError);
 

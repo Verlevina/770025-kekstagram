@@ -7,19 +7,25 @@
     xhr.responseType = 'json';
 
     xhr.open('GET', URL);
-
+    xhr.timeout = 10000;
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError();
+        onError('При загрузке изображений произошла ошибка');
       }
     });
+    xhr.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
 
+    xhr.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
     xhr.send();
   };
   window.upload = function (data, onLoad, onError) {
-    window.loadMessages.onLoadMessage();
+    window.loadMessages.onLoadMessage(true);
     var URL = 'https://js.dump.academy/kekstagram';
     var xhr = new XMLHttpRequest();
     xhr.responceType = 'multipart/form-data';
@@ -33,6 +39,6 @@
       }
     });
 
-    xhr.send();
+    xhr.send(data);
   };
 })();

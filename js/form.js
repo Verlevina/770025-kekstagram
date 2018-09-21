@@ -88,10 +88,18 @@
     effectLevelDepth.style.width = effectLevelPin.style.left;
 
   };
-  fileUploadControl.addEventListener('change', function () {
+  fileUploadControl.addEventListener('change', function (evt) {
     window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
     resetForm();
+    // загружаем наше изображение в превью
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.addEventListener('load', function (evt) {
+      imgUploadPreview.src = evt.target.result;
+    });
+
   });
 
 

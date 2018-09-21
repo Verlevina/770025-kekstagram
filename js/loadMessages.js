@@ -7,16 +7,20 @@
     .content
     .querySelector('div');
   var message = loadMessageTemplate.cloneNode(true);
-  // сообщение об успехе
-
-
-  // сообщение об ошибке
 
 
   window.loadMessages = {
 
-    onLoadMessage: function () {
-      window.loadMessages.addMessage(message);
+    onLoadMessage: function (noNewMessage, newMessage) {
+
+      if (noNewMessage) {
+        window.loadMessages.addMessage(message);
+      } else {
+        message.textContent = newMessage;
+      }
+    },
+    addLoadMessage: function () {
+      main.appendChild(message);
     },
     deleteOnLoadMessage: function () {
       this.deleteMessage(message);
