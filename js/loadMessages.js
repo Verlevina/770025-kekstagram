@@ -1,6 +1,5 @@
 'use strict';
 (function () {
-
   var main = document.querySelector('main');
   // сообщение о загрузке
   var loadMessageTemplate = document.querySelector('#messages')
@@ -47,7 +46,6 @@
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.loadMessages.deleteSuccessMessage(successMessage);
         }
-
       };
       var onDocumentPressEsc = function (evt) {
 

@@ -1,21 +1,5 @@
 'use strict';
 (function () {
-  // var photos = [];
-  // var createPhotos = function () {
-  //   for (var i = 0; i < window.data.PHOTOS_LENGTH; i++) {
-  //     photos[i] = {};
-  //     photos[i].url = window.data.getUrl(i + 1);
-  //     photos[i].likes = window.data.getLikes();
-  //     photos[i].comments = window.data.getComments();
-  //     photos[i].description = window.data.getDescription();
-  //
-  //   }
-  //   return photos;
-  // };
-  //
-  // photos = createPhotos();
-
-
   // обработчики клика на все фотографии, который показывает bigPicture
 
 

@@ -4,9 +4,7 @@
   var commentsLoader = document.querySelector('.comments-loader');
   // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива:
 
-
   window.util.bigPicture = document.querySelector('.big-picture');
-
 
   window.createBigPicture = function (CURRENT_PHOTO, photos) {
     var socialComments = window.util.bigPicture.querySelector('.social__comments');
@@ -40,7 +38,6 @@
     }
     socialComments.appendChild(commentFragment);
   };
-
 
   // Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
   // добавив им класс .visually-hidden.

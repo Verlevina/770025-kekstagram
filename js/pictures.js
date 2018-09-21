@@ -13,7 +13,6 @@
     currentPicture.querySelector('.picture__comments').textContent = photo.comments.length;
     return currentPicture;
   };
-
   // Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
   window.pictures = {
     drawPictures: function (photos) {
