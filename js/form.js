@@ -56,16 +56,19 @@
   // форма загрузки фото
   window.form.imgUploadForm = document.querySelector('.img-upload__form');
   var effectLevelLine = document.querySelector('.effect-level__line');
-
+  var effectsRadio = window.form.imgUploadOverlay.querySelectorAll('.effects__radio');
+  // инпут со значением глубины эффекта
+  var effectLevelValue = window.form.imgUploadOverlay.querySelector('.effect-level__value');
+  var START_EFFECT_RADIO_VALUE = effectLevelValue.value;
   // 1.3. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file,
   // который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
 
   // функция, обрезающая проценты и писксели
   var deleteDimension = function (value) {
-    if (value.slice(-2) === PX) {
+    if (value.slice(-PX.length) === PX) {
       return value.slice(0, -2);
     }
-    if (value.slice(-1) === PERCENT) {
+    if (value.slice(-PERCENT.length) === PERCENT) {
       return value.slice(0, -1);
     }
     return false;
@@ -76,9 +79,19 @@
       closeFileUpload();
     }
   };
+  // обнуление визуального отображения формы
+  var resetForm = function () {
+    effectsRadio[effectsRadio.length - 1].checked = true;
+    effectLevelValue.value = START_EFFECT_RADIO_VALUE;
+    imgUploadPreview.style = 'transform: scale(1); filter: brightness(1.4); ';
+    effectLevelPin.style.left = effectLevelValue.value + PERCENT;
+    effectLevelDepth.style.width = effectLevelPin.style.left;
+
+  };
   fileUploadControl.addEventListener('change', function () {
     window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
+    resetForm();
   });
 
 
@@ -129,9 +142,7 @@
 
   // 2.2. Наложение эффекта на изображение:
   // список радио
-  var effectsRadio = window.form.imgUploadOverlay.querySelectorAll('.effects__radio');
-  // инпут со значением глубины эффекта
-  var effectLevelValue = window.form.imgUploadOverlay.querySelector('.effect-level__value');
+
 
   // поиск выбранного radiobutton и выбор эффекта
   var findSelectedEffect = function () {
