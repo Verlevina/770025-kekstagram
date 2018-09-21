@@ -48,24 +48,27 @@
   var MIN_SCALE_CONTROL_VALUE = 25;
   var MAX_SCALE_CONTROL_VALUE = 100;
   // поле редактирования изображения
-  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+  window.form = {imgUploadOverlay: document.querySelector('.img-upload__overlay')};
   var fileUploadControl = document.querySelector('#upload-file');
   // кнопка закрытия редактирования изображения
   var imgUploadCancel = document.querySelector('.img-upload__cancel');
   var imgUploadPreview = document.querySelector('.img-upload__preview img');
   // форма загрузки фото
-  var imgUploadForm = document.querySelector('.img-upload__form');
+  window.form.imgUploadForm = document.querySelector('.img-upload__form');
   var effectLevelLine = document.querySelector('.effect-level__line');
-
+  var effectsRadio = window.form.imgUploadOverlay.querySelectorAll('.effects__radio');
+  // инпут со значением глубины эффекта
+  var effectLevelValue = window.form.imgUploadOverlay.querySelector('.effect-level__value');
+  var START_EFFECT_RADIO_VALUE = effectLevelValue.value;
   // 1.3. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file,
   // который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
 
   // функция, обрезающая проценты и писксели
   var deleteDimension = function (value) {
-    if (value.slice(-2) === PX) {
+    if (value.slice(-PX.length) === PX) {
       return value.slice(0, -2);
     }
-    if (value.slice(-1) === PERCENT) {
+    if (value.slice(-PERCENT.length) === PERCENT) {
       return value.slice(0, -1);
     }
     return false;
@@ -76,16 +79,34 @@
       closeFileUpload();
     }
   };
-  fileUploadControl.addEventListener('change', function () {
-    window.util.showElements(imgUploadOverlay);
+  // обнуление визуального отображения формы
+  var resetForm = function () {
+    effectsRadio[effectsRadio.length - 1].checked = true;
+    effectLevelValue.value = START_EFFECT_RADIO_VALUE;
+    imgUploadPreview.style = 'transform: scale(1); filter: brightness(1.4); ';
+    effectLevelPin.style.left = effectLevelValue.value + PERCENT;
+    effectLevelDepth.style.width = effectLevelPin.style.left;
+
+  };
+  fileUploadControl.addEventListener('change', function (evt) {
+    window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
+    resetForm();
+    // загружаем наше изображение в превью
+    var file = evt.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.addEventListener('load', function (readerEvt) {
+      imgUploadPreview.src = readerEvt.target.result;
+    });
+
   });
 
 
   // закрытие формы редактировония изображения
   var closeFileUpload = function () {
-    window.util.hideElements(imgUploadOverlay);
-    imgUploadForm.reset();
+    window.util.hideElements(window.form.imgUploadOverlay);
+    window.form.imgUploadForm.reset();
     document.removeEventListener('keydown', onDocumentPressESC);
   };
   imgUploadCancel.addEventListener('click', closeFileUpload);
@@ -93,9 +114,9 @@
   // 2.1. Масштаб:
   // При нажатии на кнопки .scale__control--smaller и .scale__control--bigger должно изменяться значение поля
   // .scale__control--value.
-  var scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
-  var scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
-  var scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
+  var scaleControlSmaller = window.form.imgUploadOverlay.querySelector('.scale__control--smaller');
+  var scaleControlBigger = window.form.imgUploadOverlay.querySelector('.scale__control--bigger');
+  var scaleControlValue = window.form.imgUploadOverlay.querySelector('.scale__control--value');
 
   var getScaleControlValue = function () {
     var value = scaleControlValue.value;
@@ -108,7 +129,6 @@
   };
   //  При изменении значения поля .scale__control--value изображению .img-upload__preview должен добавляться
   // соответствующий стиль CSS, который с помощью трансформации
-  // ???????????????????????????????????????????????????????????????????????????????????????effect-level???????????????????????????????????????????????????????
   // задаёт масштаб. Например, если в поле
   // стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75)
   scaleControlSmaller.addEventListener('click', function () {
@@ -129,13 +149,11 @@
 
   // 2.2. Наложение эффекта на изображение:
   // список радио
-  var effectsRadio = imgUploadOverlay.querySelectorAll('.effects__radio');
-  // инпут со значением глубины эффекта
-  var effectLevelValue = imgUploadOverlay.querySelector('.effect-level__value');
+
 
   // поиск выбранного radiobutton и выбор эффекта
   var findSelectedEffect = function () {
-    var selectedEffectsRadio = imgUploadOverlay.querySelector('.effects__radio:checked');
+    var selectedEffectsRadio = window.form.imgUploadOverlay.querySelector('.effects__radio:checked');
     return (selectedEffectsRadio.id).slice(7);
   };
   // Интенсивность эффекта регулируется перемещением ползунка в слайдере .effect-level__pin. Уровень эффекта записывается в поле .scale__value
@@ -146,7 +164,7 @@
   };
 
   // 2.2. Наложение эффекта на изображение:
-  var effectLevelPin = imgUploadOverlay.querySelector('.effect-level__pin');
+  var effectLevelPin = window.form.imgUploadOverlay.querySelector('.effect-level__pin');
   var selectedEffect = findSelectedEffect();
 
 
@@ -164,7 +182,7 @@
 
   // drag and drop
 
-  var effectLevelDepth = imgUploadOverlay.querySelector('.effect-level__depth');
+  var effectLevelDepth = window.form.imgUploadOverlay.querySelector('.effect-level__depth');
   effectLevelPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     var startCoorinateX = evt.clientX;
@@ -199,7 +217,7 @@
   });
 
   // клик по радио
-  var imgUploadEffectLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
+  var imgUploadEffectLevel = window.form.imgUploadOverlay.querySelector('.img-upload__effect-level');
   var onEffectsRadioClick = function () {
     for (var i = 1; i < effectsRadio.length; i++) {
       effectsRadio[i].addEventListener('click', function () {
@@ -233,12 +251,18 @@
   effectLevelPin.addEventListener('mouseup', function () {
     effectLevelLine.value = (getComputedStyle(effectLevelPin).left).slice(0, -1);
   });
-
+  // красная рамка у элемента с неверно введенным значением
+  var drawRedBorder = function (element) {
+    element.style = 'border-color:red;';
+  };
+  var deleteStyle = function (element) {
+    element.style = '';
+  };
 
   // Хэштеги
-  var textHashtags = imgUploadOverlay.querySelector('.text__hashtags');
-  var imgUploadSubmit = imgUploadOverlay.querySelector('.img-upload__submit');
-  var textDescription = imgUploadOverlay.querySelector('.text__description');
+  var textHashtags = window.form.imgUploadOverlay.querySelector('.text__hashtags');
+  var imgUploadSubmit = window.form.imgUploadOverlay.querySelector('.img-upload__submit');
+  var textDescription = window.form.imgUploadOverlay.querySelector('.text__description');
 
   textHashtags.addEventListener('blur', function () {
     // чтоб предвыдущая ошибка не высвечивалась
@@ -273,11 +297,17 @@
       var error = getInvalidMessage();
       if (error) {
         textHashtags.setCustomValidity(error);
+        drawRedBorder(textHashtags);
+      } else {
+        deleteStyle(textHashtags);
       }
     }
 
     if (textDescription.value.length > 140) {
       textDescription.setCustomValidity('длина сообщения не может быть больше 140 символов');
+      drawRedBorder(textDescription);
+    } else {
+      deleteStyle(textDescription);
     }
   });
   textDescription.addEventListener('keydown', function () {
@@ -351,4 +381,25 @@
     return false;
   };
 
+
+  // ajax оправка формы
+  window.form.imgUploadForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var onLoad = function () {
+      window.loadMessages.deleteOnLoadMessage();
+      window.util.hideElements(window.form.imgUploadOverlay);
+      window.loadMessages.onLoadSuccessMessage();
+      window.form.imgUploadForm.reset();
+    };
+
+    var onError = function () {
+      window.loadMessages.deleteOnLoadMessage();
+      window.util.hideElements(window.form.imgUploadOverlay);
+      window.loadMessages.onLoadErrorMessage();
+
+    };
+    var form = new FormData(window.form.imgUploadForm);
+    window.upload(form, onLoad, onError);
+
+  });
 })();

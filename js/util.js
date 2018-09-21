@@ -1,7 +1,7 @@
 // Файл util.js
 'use strict';
-window.util = (function () {
-  return {
+(function () {
+  window.util = {
     ESC_KEYCODE: 27,
     bigPicture: document.querySelector('.big-picture'),
     hideElements: function (element) {
@@ -13,7 +13,7 @@ window.util = (function () {
     // закрыть bigPicture esc
     onBigPictureEsc: function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {
-        window.util.hideElements(window.bigPicture);
+        window.util.hideElements(window.util.bigPicture);
       }
     },
   };
