@@ -12,7 +12,7 @@
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
-        onError('При загрузке изображений произошла ошибка');
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
     xhr.addEventListener('error', function () {
