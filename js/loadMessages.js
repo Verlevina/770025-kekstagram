@@ -7,11 +7,8 @@
     .querySelector('div');
   var message = loadMessageTemplate.cloneNode(true);
 
-
   window.loadMessages = {
-
     onLoadMessage: function (noNewMessage, newMessage) {
-
       if (noNewMessage) {
         window.loadMessages.addMessage(message);
       } else {
@@ -63,7 +60,6 @@
     deleteSuccessMessage: function (successMessage) {
       this.deleteMessage(successMessage);
     },
-
     onLoadErrorMessage: function () {
       var loadErrorMessageTemplate = document.querySelector('#error')
         .content
@@ -96,7 +92,6 @@
         }
       };
       errorMessage.addEventListener('click', onErrorMessageClick);
-
       var onDocumentPressEsc = function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
           document.removeEventListener('keyup', onDocumentPressEsc);
@@ -106,7 +101,6 @@
       };
       document.addEventListener('keyup', onDocumentPressEsc);
     },
-
     deleteErrorMessage: function (errorMessage) {
       this.deleteMessage(errorMessage);
     },

@@ -99,10 +99,7 @@
     reader.addEventListener('load', function (readerEvt) {
       imgUploadPreview.src = readerEvt.target.result;
     });
-
   });
-
-
   // закрытие формы редактировония изображения
   var closeFileUpload = function () {
     window.util.hideElements(window.form.imgUploadOverlay);
@@ -149,8 +146,6 @@
 
   // 2.2. Наложение эффекта на изображение:
   // список радио
-
-
   // поиск выбранного radiobutton и выбор эффекта
   var findSelectedEffect = function () {
     var selectedEffectsRadio = window.form.imgUploadOverlay.querySelector('.effects__radio:checked');
@@ -324,7 +319,6 @@
   var getStringInLowerCase = function (string) {
     return string.toLowerCase();
   };
-
 
   // проверяем валидность хэштегов
   var getInvalidMessage = function () {

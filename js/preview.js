@@ -4,8 +4,6 @@
   var commentsLoader = document.querySelector('.comments-loader');
   // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива:
 
-  window.util.bigPicture = document.querySelector('.big-picture');
-
   window.createBigPicture = function (CURRENT_PHOTO, photos) {
     var socialComments = window.util.bigPicture.querySelector('.social__comments');
     var commentFragment = document.createDocumentFragment();

@@ -2,12 +2,10 @@
 (function () {
   // обработчики клика на все фотографии, который показывает bigPicture
 
-
   var onPicturesClick = function (photos) {
     var picturesLink = document.querySelectorAll('.picture__img');
     for (var i = 0; i < picturesLink.length; i++) {
       picturesLink[i].addEventListener('click', function (evt) {
-
         for (var j = 0; j < picturesLink.length; j++) {
           if (picturesLink[j] === evt.target) {
             window.createBigPicture(j, photos);
@@ -32,7 +30,5 @@
 
   };
   window.load(onLoad, onError);
-
-
 })();
 
