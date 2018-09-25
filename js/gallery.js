@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   // обработчики клика на все фотографии, который показывает bigPicture
-var imageFilters = document.querySelector('.img-filters');
+  var imageFilters = document.querySelector('.img-filters');
   var onPicturesClick = function (photos) {
     var picturesLink = document.querySelectorAll('.picture__img');
     for (var i = 0; i < picturesLink.length; i++) {
@@ -17,7 +17,7 @@ var imageFilters = document.querySelector('.img-filters');
     }
   };
   // получение данных с сервера
-  var onLoad = function (photos) {
+  var onLoad = function (photos) { 
     window.pictures.drawPictures(photos);
     onPicturesClick(photos);
     imageFilters.classList.remove('img-filters--inactive');
