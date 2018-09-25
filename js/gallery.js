@@ -1,13 +1,11 @@
 'use strict';
 (function () {
   // обработчики клика на все фотографии, который показывает bigPicture
-
-
+var imageFilters = document.querySelector('.img-filters');
   var onPicturesClick = function (photos) {
     var picturesLink = document.querySelectorAll('.picture__img');
     for (var i = 0; i < picturesLink.length; i++) {
       picturesLink[i].addEventListener('click', function (evt) {
-
         for (var j = 0; j < picturesLink.length; j++) {
           if (picturesLink[j] === evt.target) {
             window.createBigPicture(j, photos);
@@ -22,6 +20,7 @@
   var onLoad = function (photos) {
     window.pictures.drawPictures(photos);
     onPicturesClick(photos);
+    imageFilters.classList.remove('img-filters--inactive');
   };
   var onError = function (message) {
     window.loadMessages.onLoadMessage(false, message);
@@ -32,7 +31,5 @@
 
   };
   window.load(onLoad, onError);
-
-
 })();
 

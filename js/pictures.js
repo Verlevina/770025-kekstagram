@@ -5,7 +5,6 @@
     .content
     .querySelector('.picture');
   var pictures = document.querySelector('.pictures');
-
   var renderPhoto = function (photo) {
     var currentPicture = pictureTemplate.cloneNode(true);
     currentPicture.querySelector('.picture__img').setAttribute('src', photo.url);
@@ -17,7 +16,6 @@
   window.pictures = {
     drawPictures: function (photos) {
       var fragment = document.createDocumentFragment();
-
       for (var i = 0; i < photos.length; i++) {
         fragment.appendChild(renderPhoto(photos[i]));
       }
