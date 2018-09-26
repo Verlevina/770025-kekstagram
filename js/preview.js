@@ -1,5 +1,7 @@
 'use strict';
 (function () {
+  var commentsLength = 5;
+  var n = 1;
   var socialCommentCount = document.querySelector('.social__comment-count');
   var commentsLoader = document.querySelector('.comments-loader');
   // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива:
@@ -9,13 +11,8 @@
     var commentFragment = document.createDocumentFragment();
     var socialComment = socialComments.querySelector('.social__comment');
     // удаление шаблонных элементов
-    var currentSocialCommentsLength = socialComments.childElementCount;
-    var deleteSocialComments = function () {
-      for (var i = currentSocialCommentsLength - 1; i >= 0; i--) {
-        socialComments.removeChild(socialComments.children[i]);
-      }
-    };
-    deleteSocialComments();
+
+    window.util.deleteChildren(socialComments, false);
     window.util.bigPicture.querySelector('.big-picture__img').querySelector('img').setAttribute('src', photos[CURRENT_PHOTO].url);
     window.util.bigPicture.querySelector('.likes-count').textContent = photos[CURRENT_PHOTO].likes;
     window.util.bigPicture.querySelector('.comments-count').textContent = photos[CURRENT_PHOTO].comments.length;
@@ -31,8 +28,10 @@
       commentTemplate.querySelector('img').setAttribute('src', window.data.getAvatarUrl());
       return commentTemplate;
     };
-    for (var j = 0; j < photos[CURRENT_PHOTO].comments.length; j++) {
-      commentFragment.appendChild(addCommentFragment(j));
+    for (var j = 0; j < commentsLength * n; j++) {
+      if (photos[CURRENT_PHOTO].comments[j]) {
+        commentFragment.appendChild(addCommentFragment(j));
+      }
     }
     socialComments.appendChild(commentFragment);
   };

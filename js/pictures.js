@@ -4,7 +4,7 @@
   var pictureTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture');
-  var pictures = document.querySelector('.pictures');
+
   var renderPhoto = function (photo) {
     var currentPicture = pictureTemplate.cloneNode(true);
     currentPicture.querySelector('.picture__img').setAttribute('src', photo.url);
@@ -14,12 +14,13 @@
   };
   // Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
   window.pictures = {
+    images: document.querySelector('.pictures'),
     drawPictures: function (photos) {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < photos.length; i++) {
         fragment.appendChild(renderPhoto(photos[i]));
       }
-      pictures.appendChild(fragment);
+      this.images.appendChild(fragment);
     }
   };
 
