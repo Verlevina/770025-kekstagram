@@ -84,7 +84,6 @@
   fileUploadControl.addEventListener('change', function (evt) {
     window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
-    resetForm();
     // загружаем наше изображение в превью
     var file = evt.target.files[0];
     var reader = new FileReader();
@@ -166,17 +165,7 @@
       }
     }
   };
-  // обнуление визуального отображения формы
-  var resetForm = function () {
-    effectsRadio[effectsRadio.length - 1].checked = true;
-    effectLevelValue.value = START_EFFECT_RADIO_VALUE;
-    changeDeepOfEffect();
-    addScaleImgUploadPreview();
-    // imgUploadPreview.style = 'transform: scale(1); filter: brightness(1.4); ';
-    effectLevelPin.style.left = effectLevelValue.value + PERCENT;
-    effectLevelDepth.style.width = effectLevelPin.style.left;
 
-  };
   // drag and drop
 
   var effectLevelDepth = window.form.imgUploadOverlay.querySelector('.effect-level__depth');
