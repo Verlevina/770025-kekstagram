@@ -59,6 +59,7 @@
   var effectsRadio = window.form.imgUploadOverlay.querySelectorAll('.effects__radio');
   // инпут со значением глубины эффекта
   var effectLevelValue = window.form.imgUploadOverlay.querySelector('.effect-level__value');
+  var altMessage = 'Ваше фото';
   var START_EFFECT_RADIO_VALUE = effectLevelValue.value;
   // 1.3. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file,
   // который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
@@ -79,15 +80,7 @@
       closeFileUpload();
     }
   };
-  // обнуление визуального отображения формы
-  var resetForm = function () {
-    effectsRadio[effectsRadio.length - 1].checked = true;
-    effectLevelValue.value = START_EFFECT_RADIO_VALUE;
-    imgUploadPreview.style = 'transform: scale(1); filter: brightness(1.4); ';
-    effectLevelPin.style.left = effectLevelValue.value + PERCENT;
-    effectLevelDepth.style.width = effectLevelPin.style.left;
 
-  };
   fileUploadControl.addEventListener('change', function (evt) {
     window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
@@ -98,6 +91,7 @@
     reader.readAsDataURL(file);
     reader.addEventListener('load', function (readerEvt) {
       imgUploadPreview.src = readerEvt.target.result;
+      imgUploadPreview.alt = altMessage;
     });
   });
   // закрытие формы редактировония изображения
@@ -164,8 +158,6 @@
 
 
   var changeDeepOfEffect = function () {
-    // effectLevelValue.addEventListener('change', function () {
-    // document.querySelector('.img-upload__effect-level').addEventListener('click', function () {
     var effect = findSelectedEffect();
     for (var i = 0; i < DEEP_EFFECT.length; i++) {
       if (DEEP_EFFECT[i].name === effect) {
@@ -174,7 +166,17 @@
       }
     }
   };
+  // обнуление визуального отображения формы
+  var resetForm = function () {
+    effectsRadio[effectsRadio.length - 1].checked = true;
+    effectLevelValue.value = START_EFFECT_RADIO_VALUE;
+    changeDeepOfEffect();
+    addScaleImgUploadPreview();
+    // imgUploadPreview.style = 'transform: scale(1); filter: brightness(1.4); ';
+    effectLevelPin.style.left = effectLevelValue.value + PERCENT;
+    effectLevelDepth.style.width = effectLevelPin.style.left;
 
+  };
   // drag and drop
 
   var effectLevelDepth = window.form.imgUploadOverlay.querySelector('.effect-level__depth');
