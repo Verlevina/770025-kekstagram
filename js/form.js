@@ -385,7 +385,7 @@
 
     };
     var form = new FormData(window.form.imgUploadForm);
-    window.upload(onLoad, onError, form);
+    window.upload(form, onLoad, onError);
 
   });
 })();
