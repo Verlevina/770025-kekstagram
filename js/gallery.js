@@ -65,42 +65,38 @@
     return sortArray;
   };
 
+  var getPopularPhoto = function (photos) {
+    return photos.slice();
+  };
+
 
   // обработка кликов по кнокпам сортировки
   var onFilterClick = function (photos) {
     var buttons = imageFilters.querySelectorAll('button');
     var sortPhotosArray = [];
-    var onButtonClick = function(){
+    var onButtonClick = function (callback, evt) {
       var activeButton = imageFilters.querySelector('.img-filters__button--active');
       activeButton.classList.remove('img-filters__button--active');
       evt.target.classList.add('img-filters__button--active');
       window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = getDiscussablePhotos(photos);
+      sortPhotosArray = callback(photos);
       window.pictures.drawPictures(sortPhotosArray);
       onPicturesClick(sortPhotosArray);
     };
     var onButtonDiscusingClick = window.debounce(function (evt) {
 
-      sortPhotosArray = getDiscussablePhotos(photos);
-      onButtonClick(sortPhotosArray)
+      var getPhoto = getDiscussablePhotos;
+      onButtonClick(getPhoto, evt);
     });
+
     var onButtonPopularClick = window.debounce(function (evt) {
-      var activeButton = imageFilters.querySelector('.img-filters__button--active');
-      activeButton.classList.remove('img-filters__button--active');
-      evt.target.classList.add('img-filters__button--active');
-      window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = photos.slice();
-      window.pictures.drawPictures(sortPhotosArray);
-      onPicturesClick(sortPhotosArray);
+      var getPhoto = getPopularPhoto;
+      onButtonClick(getPhoto, evt);
     });
+
     var onButtonNewClick = window.debounce(function (evt) {
-      var activeButton = imageFilters.querySelector('.img-filters__button--active');
-      activeButton.classList.remove('img-filters__button--active');
-      evt.target.classList.add('img-filters__button--active');
-      window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = getNewPhotos(photos);
-      window.pictures.drawPictures(sortPhotosArray);
-      onPicturesClick(sortPhotosArray);
+      var getPhoto = getNewPhotos;
+      onButtonClick(getPhoto, evt);
     });
     buttons[0].addEventListener('click', onButtonPopularClick);
     buttons[1].addEventListener('click', onButtonNewClick);
