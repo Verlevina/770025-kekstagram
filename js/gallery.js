@@ -65,11 +65,26 @@
     return sortArray;
   };
 
+
   // обработка кликов по кнокпам сортировки
   var onFilterClick = function (photos) {
     var buttons = imageFilters.querySelectorAll('button');
     var sortPhotosArray = [];
-    buttons[0].addEventListener('click', function (evt) {
+    var onButtonClick = function(){
+      var activeButton = imageFilters.querySelector('.img-filters__button--active');
+      activeButton.classList.remove('img-filters__button--active');
+      evt.target.classList.add('img-filters__button--active');
+      window.util.deleteChildren(window.pictures.images, true);
+      sortPhotosArray = getDiscussablePhotos(photos);
+      window.pictures.drawPictures(sortPhotosArray);
+      onPicturesClick(sortPhotosArray);
+    };
+    var onButtonDiscusingClick = window.debounce(function (evt) {
+
+      sortPhotosArray = getDiscussablePhotos(photos);
+      onButtonClick(sortPhotosArray)
+    });
+    var onButtonPopularClick = window.debounce(function (evt) {
       var activeButton = imageFilters.querySelector('.img-filters__button--active');
       activeButton.classList.remove('img-filters__button--active');
       evt.target.classList.add('img-filters__button--active');
@@ -78,7 +93,7 @@
       window.pictures.drawPictures(sortPhotosArray);
       onPicturesClick(sortPhotosArray);
     });
-    buttons[1].addEventListener('click', function (evt) {
+    var onButtonNewClick = window.debounce(function (evt) {
       var activeButton = imageFilters.querySelector('.img-filters__button--active');
       activeButton.classList.remove('img-filters__button--active');
       evt.target.classList.add('img-filters__button--active');
@@ -87,15 +102,9 @@
       window.pictures.drawPictures(sortPhotosArray);
       onPicturesClick(sortPhotosArray);
     });
-    buttons[2].addEventListener('click', function (evt) {
-      var activeButton = imageFilters.querySelector('.img-filters__button--active');
-      activeButton.classList.remove('img-filters__button--active');
-      evt.target.classList.add('img-filters__button--active');
-      window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = getDiscussablePhotos(photos);
-      window.pictures.drawPictures(sortPhotosArray);
-      onPicturesClick(sortPhotosArray);
-    });
+    buttons[0].addEventListener('click', onButtonPopularClick);
+    buttons[1].addEventListener('click', onButtonNewClick);
+    buttons[2].addEventListener('click', onButtonDiscusingClick);
   };
   // получение данных с сервера
   var onLoad = function (photos) {
