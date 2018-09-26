@@ -161,7 +161,7 @@
     var effect = findSelectedEffect();
     for (var i = 0; i < DEEP_EFFECT.length; i++) {
       if (DEEP_EFFECT[i].name === effect) {
-        var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
+        var filterValue = DEEP_EFFECT[i][effect] + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
         imgUploadPreview.style.filter = filterValue;
       }
     }
