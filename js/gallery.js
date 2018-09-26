@@ -65,37 +65,42 @@
     return sortArray;
   };
 
+  var getPopularPhoto = function (photos) {
+    return photos.slice();
+  };
+
+
   // обработка кликов по кнокпам сортировки
   var onFilterClick = function (photos) {
     var buttons = imageFilters.querySelectorAll('button');
     var sortPhotosArray = [];
-    buttons[0].addEventListener('click', function (evt) {
+    var onButtonClick = function (callback, evt) {
       var activeButton = imageFilters.querySelector('.img-filters__button--active');
       activeButton.classList.remove('img-filters__button--active');
       evt.target.classList.add('img-filters__button--active');
       window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = photos.slice();
+      sortPhotosArray = callback(photos);
       window.pictures.drawPictures(sortPhotosArray);
       onPicturesClick(sortPhotosArray);
+    };
+    var onButtonDiscusingClick = window.debounce(function (evt) {
+
+      var getPhoto = getDiscussablePhotos;
+      onButtonClick(getPhoto, evt);
     });
-    buttons[1].addEventListener('click', function (evt) {
-      var activeButton = imageFilters.querySelector('.img-filters__button--active');
-      activeButton.classList.remove('img-filters__button--active');
-      evt.target.classList.add('img-filters__button--active');
-      window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = getNewPhotos(photos);
-      window.pictures.drawPictures(sortPhotosArray);
-      onPicturesClick(sortPhotosArray);
+
+    var onButtonPopularClick = window.debounce(function (evt) {
+      var getPhoto = getPopularPhoto;
+      onButtonClick(getPhoto, evt);
     });
-    buttons[2].addEventListener('click', function (evt) {
-      var activeButton = imageFilters.querySelector('.img-filters__button--active');
-      activeButton.classList.remove('img-filters__button--active');
-      evt.target.classList.add('img-filters__button--active');
-      window.util.deleteChildren(window.pictures.images, true);
-      sortPhotosArray = getDiscussablePhotos(photos);
-      window.pictures.drawPictures(sortPhotosArray);
-      onPicturesClick(sortPhotosArray);
+
+    var onButtonNewClick = window.debounce(function (evt) {
+      var getPhoto = getNewPhotos;
+      onButtonClick(getPhoto, evt);
     });
+    buttons[0].addEventListener('click', onButtonPopularClick);
+    buttons[1].addEventListener('click', onButtonNewClick);
+    buttons[2].addEventListener('click', onButtonDiscusingClick);
   };
   // получение данных с сервера
   var onLoad = function (photos) {
