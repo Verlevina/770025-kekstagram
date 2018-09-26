@@ -19,11 +19,7 @@
     if (typeof (isFor) === 'undefined') {
       isFor = true;
     }
-    if (isFor) {
-      return Math.floor(Math.random() * (max - min) + min);
-    } else {
-      return Math.ceil(Math.random() * (max - min) + min);
-    }
+    return isFor ? Math.floor(Math.random() * (max - min) + min) : Math.ceil(Math.random() * (max - min) + min);
   };
 
   window.data = {

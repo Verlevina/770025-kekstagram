@@ -10,9 +10,31 @@
     var socialComments = window.util.bigPicture.querySelector('.social__comments');
     var commentFragment = document.createDocumentFragment();
     var socialComment = socialComments.querySelector('.social__comment');
+    var appendComments = function (count) {
+      for (var j = 0; j < commentsLength * count; j++) {
+        if (photos[CURRENT_PHOTO].comments[j]) {
+          commentFragment.appendChild(addCommentFragment(j));
+        } else {
+          socialCommentsLoader.classList.add('hidden');
+          break;
+        }
+      }
+      socialComments.appendChild(commentFragment);
+    };
+    // клик по кнопке загрузки комментариев
+    var onSocialCommentLoaderClick = function () {
+      n++;
+      if (commentsLength * n <= Math.ceil(photos[CURRENT_PHOTO].comments.length / 10) * 10) {
+        window.util.deleteChildren(socialComments, false);
+        appendComments(n);
+      }
+    };
     // удаление шаблонных элементов
 
     window.util.deleteChildren(socialComments, false);
+    var socialCommentsLoader = window.util.bigPicture.querySelector('.social__comments-loader');
+    socialCommentsLoader.classList.remove('hidden');
+    socialCommentsLoader.addEventListener('click', onSocialCommentLoaderClick);
     window.util.bigPicture.querySelector('.big-picture__img').querySelector('img').setAttribute('src', photos[CURRENT_PHOTO].url);
     window.util.bigPicture.querySelector('.likes-count').textContent = photos[CURRENT_PHOTO].likes;
     window.util.bigPicture.querySelector('.comments-count').textContent = photos[CURRENT_PHOTO].comments.length;
@@ -28,12 +50,8 @@
       commentTemplate.querySelector('img').setAttribute('src', window.data.getAvatarUrl());
       return commentTemplate;
     };
-    for (var j = 0; j < commentsLength * n; j++) {
-      if (photos[CURRENT_PHOTO].comments[j]) {
-        commentFragment.appendChild(addCommentFragment(j));
-      }
-    }
-    socialComments.appendChild(commentFragment);
+
+    appendComments(n);
   };
 
   // Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
