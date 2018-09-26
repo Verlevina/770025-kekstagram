@@ -1,33 +1,33 @@
 'use strict';
 (function () {
   var commentsLength = 5;
-  var n = 1;
   var socialCommentCount = document.querySelector('.social__comment-count');
-  var commentsLoader = document.querySelector('.comments-loader');
+
   // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива:
 
   window.createBigPicture = function (CURRENT_PHOTO, photos) {
+    var n = 1;
     var socialComments = window.util.bigPicture.querySelector('.social__comments');
     var commentFragment = document.createDocumentFragment();
     var socialComment = socialComments.querySelector('.social__comment');
-    var appendComments = function (count) {
-      for (var j = 0; j < commentsLength * count; j++) {
-        if (photos[CURRENT_PHOTO].comments[j]) {
-          commentFragment.appendChild(addCommentFragment(j));
-        } else {
+    var sliceComments = photos[CURRENT_PHOTO].comments.slice(0, commentsLength);
+    var appendComments = function (comments) {
+      for (var j = 0; j < comments.length; j++) {
+        commentFragment.appendChild(addCommentFragment(j));
+        socialCommentCount.childNodes[0].textContent = comments.length + ' из ';
+        if (j + 1 === photos[CURRENT_PHOTO].comments.length) {
           socialCommentsLoader.classList.add('hidden');
-          break;
         }
       }
       socialComments.appendChild(commentFragment);
     };
-    // клик по кнопке загрузки комментариев
+    // // клик по кнопке загрузки комментариев
+
     var onSocialCommentLoaderClick = function () {
+      window.util.deleteChildren(socialComments, false);
       n++;
-      if (commentsLength * n <= Math.ceil(photos[CURRENT_PHOTO].comments.length / 10) * 10) {
-        window.util.deleteChildren(socialComments, false);
-        appendComments(n);
-      }
+      sliceComments = photos[CURRENT_PHOTO].comments.slice(0, commentsLength * n);
+      appendComments(sliceComments);
     };
     // удаление шаблонных элементов
 
@@ -51,11 +51,10 @@
       return commentTemplate;
     };
 
-    appendComments(n);
+    appendComments(sliceComments);
   };
 
   // Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
   // добавив им класс .visually-hidden.
-  window.util.hideElements(socialCommentCount);
-  window.util.hideElements(commentsLoader);
+  // window.util.hideElements(socialCommentCount);
 })();
