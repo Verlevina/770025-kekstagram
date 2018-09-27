@@ -95,12 +95,26 @@
       imgUploadPreview.src = readerEvt.target.result;
     });
   });
+
+
+
+
+
+
+  var clearStyleAndClass = function (element) {
+    element.style = '';
+   element.className = '';
+  };
   // закрытие формы редактировония изображения
   var closeFileUpload = function () {
+    effectsRadio[0].checked = true;
+    clearStyleAndClass(imgUploadPreview);
     window.util.hideElements(window.form.imgUploadOverlay);
     window.form.imgUploadForm.reset();
+    window.util.hideElements(imgUploadEffectLevel);
     document.removeEventListener('keydown', onDocumentPressESC);
   };
+
   imgUploadCancel.addEventListener('click', closeFileUpload);
   // 2. Редактирование изображения и ограничения, накладываемые на поля
   // 2.1. Масштаб:
