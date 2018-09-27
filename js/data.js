@@ -16,10 +16,8 @@
       isFor = min;
       min = 0;
     }
-    if (isFor) {
-      isFor = true;
-    }
-    return isFor ? Math.floor(Math.random() * (max - min) + min) : Math.ceil(Math.random() * (max - min) + min);
+
+    return !isFor ? Math.floor(Math.random() * (max - min) + min) : Math.ceil(Math.random() * (max - min) + min);
   };
 
   window.data = {
@@ -28,7 +26,7 @@
     },
     // url avatar
     getAvatarUrl: function () {
-      return 'img/avatar-' + getRandomNumber(6, false) + '.svg';
+      return 'img/avatar-' + getRandomNumber(6, true) + '.svg';
     },
   };
 })();
