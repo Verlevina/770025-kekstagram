@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var descriptions = [
+  var DESCRIPTIONS = [
     'Тестим новую камеру!',
     'Затусили с друзьями на море',
     'Как же круто тут кормят',
@@ -24,7 +24,7 @@
 
   window.data = {
     getDescription: function () {
-      return descriptions[getRandomNumber(descriptions.length)];
+      return DESCRIPTIONS[getRandomNumber(DESCRIPTIONS.length)];
     },
     // url avatar
     getAvatarUrl: function () {

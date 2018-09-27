@@ -9,7 +9,7 @@
     upload: {
       URL: 'https://js.dump.academy/kekstagram',
       type: 'POST',
-      typeResponse: 'multipart/form-data'
+      typeResponse: 'json'
     }
   };
   var request = function (ajaxInfo, onLoad, onError, data) {

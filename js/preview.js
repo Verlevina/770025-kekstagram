@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var commentsLength = 5;
+  var COMMENTS_LENGTH = 5;
   var socialCommentCount = document.querySelector('.social__comment-count');
 
   // Покажите элемент .big-picture, удалив у него класс .hidden и заполните его данными из первого элемента сгенерированного вами массива:
@@ -10,7 +10,7 @@
     var socialComments = window.util.bigPicture.querySelector('.social__comments');
     var commentFragment = document.createDocumentFragment();
     var socialComment = socialComments.querySelector('.social__comment');
-    var sliceComments = photos[CURRENT_PHOTO].comments.slice(0, commentsLength);
+    var sliceComments = photos[CURRENT_PHOTO].comments.slice(0, COMMENTS_LENGTH);
     var appendComments = function (comments) {
       for (var j = 0; j < comments.length; j++) {
         commentFragment.appendChild(addCommentFragment(j));
@@ -22,16 +22,14 @@
       socialComments.appendChild(commentFragment);
     };
     // // клик по кнопке загрузки комментариев
-
     var onSocialCommentLoaderClick = function () {
       socialCommentsLoader.classList.remove('hidden');
       n++;
       window.util.deleteChildren(socialComments, false);
-      sliceComments = photos[CURRENT_PHOTO].comments.slice(0, commentsLength * n);
+      sliceComments = photos[CURRENT_PHOTO].comments.slice(0, COMMENTS_LENGTH * n);
       appendComments(sliceComments);
     };
     // удаление шаблонных элементов
-
     window.util.deleteChildren(socialComments, false);
     var socialCommentsLoader = window.util.bigPicture.querySelector('.social__comments-loader');
     socialCommentsLoader.classList.remove('hidden');

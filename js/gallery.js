@@ -54,13 +54,7 @@
   var getDiscussablePhotos = function (photos) {
     var sortArray = photos.slice();
     sortArray.sort(function (a, b) {
-      if (a.comments.length > b.comments.length) {
-        return -1;
-      }
-      if (b.comments.length > a.comments.length) {
-        return 1;
-      }
-      return 0;
+      return b.comments.length - a.comments.length;
     });
     return sortArray;
   };
@@ -84,19 +78,15 @@
       onPicturesClick(sortPhotosArray);
     };
     var onButtonDiscusingClick = window.debounce(function (evt) {
-
-      var getPhoto = getDiscussablePhotos;
-      onButtonClick(getPhoto, evt);
+      onButtonClick(getDiscussablePhotos, evt);
     });
 
     var onButtonPopularClick = window.debounce(function (evt) {
-      var getPhoto = getPopularPhoto;
-      onButtonClick(getPhoto, evt);
+      onButtonClick(getPopularPhoto, evt);
     });
 
     var onButtonNewClick = window.debounce(function (evt) {
-      var getPhoto = getNewPhotos;
-      onButtonClick(getPhoto, evt);
+      onButtonClick(getNewPhotos, evt);
     });
     buttons[0].addEventListener('click', onButtonPopularClick);
     buttons[1].addEventListener('click', onButtonNewClick);

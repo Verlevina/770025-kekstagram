@@ -4,7 +4,7 @@
   var EFFECT_DEEP_CONTROL_MAX = 100;
   var EFFECT_DEEP_CONTROL_MIN = 0;
   //  объект со шкалой глубин эффектов фотто
-  var DEEP_EFFECT = [
+  var DEEP_EFFECTS = [
     {
       name: 'chrome',
       value: 'grayscale',
@@ -41,6 +41,9 @@
       unit: ''
     }
   ];
+  var MAX_HASHTAGS_QUANTITY = 5;
+  var MAX_HASTAG_LENGTH = 20;
+  var MIN_HASHTAGS_LENGTH = 1;
   var PX = 'px';
   var PERCENT = '%';
   var HASHTAG = '#';
@@ -159,9 +162,9 @@
     // effectLevelValue.addEventListener('change', function () {
     // document.querySelector('.img-upload__effect-level').addEventListener('click', function () {
     var effect = findSelectedEffect();
-    for (var i = 0; i < DEEP_EFFECT.length; i++) {
-      if (DEEP_EFFECT[i].name === effect) {
-        var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
+    for (var i = 0; i < DEEP_EFFECTS.length; i++) {
+      if (DEEP_EFFECTS[i].name === effect) {
+        var filterValue = DEEP_EFFECTS[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECTS[i]) + DEEP_EFFECTS[i].unit + ')';
         imgUploadPreview.style.filter = filterValue;
       }
     }
@@ -314,9 +317,6 @@
 
   // проверяем валидность хэштегов
   var getInvalidMessage = function () {
-    var MAX_HASHTAGS_QUANTITY = 5;
-    var MAX_HASTAG_LENGTH = 20;
-    var MIN_HASHTAGS_LENGTH = 1;
     var stringOfHashtags = getStringInLowerCase(textHashtags.value);
     var isWhiteSpace = false;
     var quantity = 0;
