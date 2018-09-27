@@ -16,7 +16,7 @@
       isFor = min;
       min = 0;
     }
-    if (typeof (isFor) === 'undefined') {
+    if (isFor) {
       isFor = true;
     }
     return isFor ? Math.floor(Math.random() * (max - min) + min) : Math.ceil(Math.random() * (max - min) + min);
