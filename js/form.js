@@ -97,21 +97,17 @@
   });
 
 
-
-
-
-
-  var clearStyleAndClass = function (element) {
-    element.style = '';
-   element.className = '';
+  window.form.clearStyleAndClass = function () {
+    imgUploadPreview.style = '';
+    imgUploadPreview.className = '';
+    effectsRadio[0].checked = true;
+    window.util.hideElements(imgUploadEffectLevel);
   };
   // закрытие формы редактировония изображения
   var closeFileUpload = function () {
-    effectsRadio[0].checked = true;
-    clearStyleAndClass(imgUploadPreview);
+    window.form.clearStyleAndClass();
     window.util.hideElements(window.form.imgUploadOverlay);
     window.form.imgUploadForm.reset();
-    window.util.hideElements(imgUploadEffectLevel);
     document.removeEventListener('keydown', onDocumentPressESC);
   };
 
@@ -389,6 +385,7 @@
       window.loadMessages.deleteOnLoadMessage();
       window.util.hideElements(window.form.imgUploadOverlay);
       window.loadMessages.onLoadSuccessMessage();
+      window.form.clearStyleAndClass();
       window.form.imgUploadForm.reset();
     };
 

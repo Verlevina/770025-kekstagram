@@ -73,6 +73,7 @@
       var onErrorMessageClick = function (evt) {
         if (evt.target !== errorInner && evt.target !== errorButtonTryAgain && evt.target !== errorButtonApplyAnotherFile) {
           evt.preventDefault();
+          window.form.clearStyleAndClass();
           errorMessage.removeEventListener('click', onErrorMessageClick);
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.imgUploadForm.reset();
@@ -87,6 +88,7 @@
         }
         if (evt.target === errorButtonApplyAnotherFile) {
           evt.preventDefault();
+          window.form.clearStyleAndClass();
           errorMessage.removeEventListener('click', onErrorMessageClick);
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.imgUploadForm.reset();
@@ -97,6 +99,7 @@
       var onDocumentPressEsc = function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
           document.removeEventListener('keyup', onDocumentPressEsc);
+          window.form.clearStyleAndClass();
           window.form.imgUploadForm.reset();
           window.loadMessages.deleteErrorMessage(errorMessage);
         }
