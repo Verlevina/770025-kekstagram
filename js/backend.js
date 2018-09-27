@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var ajaxRequestInfo = {
+  var AJAX_REQUEST_INFO = {
     load: {
       URL: 'https://js.dump.academy/kekstagram/data',
       type: 'GET',
@@ -42,11 +42,11 @@
 
 
   window.load = function (onLoad, onError) {
-    request(ajaxRequestInfo.load, onLoad, onError);
+    request(AJAX_REQUEST_INFO.load, onLoad, onError);
   };
 
   window.upload = function (data, onLoad, onError) {
     window.loadMessages.onLoadMessage(true);
-    request(ajaxRequestInfo.upload, onLoad, onError, data);
+    request(AJAX_REQUEST_INFO.upload, onLoad, onError, data);
   };
 })();

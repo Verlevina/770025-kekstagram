@@ -1,7 +1,6 @@
 // Файл util.js
 'use strict';
 (function () {
-
   window.util = {
     ESC_KEYCODE: 27,
     bigPicture: document.querySelector('.big-picture'),

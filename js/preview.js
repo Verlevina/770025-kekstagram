@@ -55,7 +55,4 @@
     appendComments(sliceComments);
   };
 
-  // Спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader,
-  // добавив им класс .visually-hidden.
-  // window.util.hideElements(socialCommentCount);
 })();

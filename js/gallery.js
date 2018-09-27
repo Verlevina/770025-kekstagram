@@ -1,8 +1,6 @@
 'use strict';
 (function () {
 
-  // объект map соответствия выполняемой функции кнопке фильтрации
-
   // обработчики клика на все фотографии, который показывает bigPicture
   var imageFilters = document.querySelector('.img-filters');
   var onPicturesClick = function (photos) {
@@ -62,8 +60,6 @@
   var getPopularPhoto = function (photos) {
     return photos.slice();
   };
-
-
   // обработка кликов по кнокпам сортировки
   var onFilterClick = function (photos) {
     var buttons = imageFilters.querySelectorAll('button');
