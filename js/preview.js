@@ -15,7 +15,7 @@
       for (var j = 0; j < comments.length; j++) {
         commentFragment.appendChild(addCommentFragment(j));
         socialCommentCount.childNodes[0].textContent = comments.length + ' из ';
-        if (j + 1 === photos[CURRENT_PHOTO].comments.length) {
+        if (j + 1 >= photos[CURRENT_PHOTO].comments.length) {
           socialCommentsLoader.classList.add('hidden');
         }
       }
@@ -24,8 +24,9 @@
     // // клик по кнопке загрузки комментариев
 
     var onSocialCommentLoaderClick = function () {
-      window.util.deleteChildren(socialComments, false);
+      socialCommentsLoader.classList.remove('hidden');
       n++;
+      window.util.deleteChildren(socialComments, false);
       sliceComments = photos[CURRENT_PHOTO].comments.slice(0, commentsLength * n);
       appendComments(sliceComments);
     };
@@ -41,7 +42,9 @@
     window.util.bigPicture.querySelector('.social__caption').textContent = window.data.getDescription();
     window.util.bigPicture.querySelector('.big-picture__cancel').addEventListener('click', function () {
       window.util.hideElements(window.util.bigPicture);
-      document.addEventListener('keydown', window.util.onBigPictureEsc);
+      document.addEventListener('keydown', function () {
+        window.util.onBigPictureEsc();
+      });
     });
 
     var addCommentFragment = function (numberOfComment) {
