@@ -33,6 +33,7 @@
         if (evt.target !== successInner && evt.target !== button) {
           evt.preventDefault();
           successMessage.removeEventListener('click', onSuccessMessageClick);
+          document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.imgUploadForm.reset();
           window.loadMessages.deleteSuccessMessage(successMessage);
         }
@@ -73,6 +74,7 @@
         if (evt.target !== errorInner && evt.target !== errorButtonTryAgain && evt.target !== errorButtonApplyAnotherFile) {
           evt.preventDefault();
           errorMessage.removeEventListener('click', onErrorMessageClick);
+          document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.imgUploadForm.reset();
           window.loadMessages.deleteErrorMessage(errorMessage);
         }
