@@ -3,6 +3,7 @@
 (function () {
   window.util = {
     ESC_KEYCODE: 27,
+    ENTER_KEYCODE: 13,
     bigPicture: document.querySelector('.big-picture'),
     hideElements: function (element) {
       element.classList.add('hidden');
@@ -13,6 +14,8 @@
     // закрыть bigPicture esc
     onBigPictureEsc: function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {
+        document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
+        document.removeEventListener('keydown', window.util.onBigPictureEsc);
         window.util.hideElements(window.util.bigPicture);
       }
     },

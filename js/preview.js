@@ -40,10 +40,10 @@
     window.util.bigPicture.querySelector('.social__caption').textContent = window.data.getDescription();
     window.util.bigPicture.querySelector('.big-picture__cancel').addEventListener('click', function () {
       window.util.hideElements(window.util.bigPicture);
-      document.addEventListener('keydown', function (evt) {
-        window.util.onBigPictureEsc(evt);
-      });
+      document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
+      document.removeEventListener('keydown', window.util.onBigPictureEsc);
     });
+    document.removeEventListener('keydown', window.gallery.onDocumentEnterPress);
 
     var addCommentFragment = function (numberOfComment) {
       var commentTemplate = socialComment.cloneNode(true);

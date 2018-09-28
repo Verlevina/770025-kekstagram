@@ -1,19 +1,31 @@
 'use strict';
 (function () {
-
+  window.gallery = {};
   // обработчики клика на все фотографии, который показывает bigPicture
   var imageFilters = document.querySelector('.img-filters');
   var onPicturesClick = function (photos) {
     var picturesLink = document.querySelectorAll('.picture__img');
+    window.gallery.onDocumentEnterPress = function (evt) {
+      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+        for (var j = 0; j < picturesLink.length; j++) {
+          if (picturesLink[j].parentElement === evt.target) {
+            window.createBigPicture(j, photos);
+            window.util.showElements(window.util.bigPicture);
+            document.addEventListener('keydown', window.util.onBigPictureEsc);
+          }
+        }
+      }
+    };
+    document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
     for (var i = 0; i < picturesLink.length; i++) {
       picturesLink[i].addEventListener('click', function (evt) {
         for (var j = 0; j < picturesLink.length; j++) {
           if (picturesLink[j] === evt.target) {
             window.createBigPicture(j, photos);
+            window.util.showElements(window.util.bigPicture);
+            document.addEventListener('keydown', window.util.onBigPictureEsc);
           }
         }
-        window.util.showElements(window.util.bigPicture);
-        document.addEventListener('keydown', window.util.onBigPictureEsc);
       });
     }
   };
@@ -74,14 +86,17 @@
       onPicturesClick(sortPhotosArray);
     };
     var onButtonDiscusingClick = window.debounce(function (evt) {
+      document.removeEventListener('keydown', window.gallery.onDocumentEnterPress);
       onButtonClick(getDiscussablePhotos, evt);
     });
 
     var onButtonPopularClick = window.debounce(function (evt) {
+      document.removeEventListener('keydown', window.gallery.onDocumentEnterPress);
       onButtonClick(getPopularPhoto, evt);
     });
 
     var onButtonNewClick = window.debounce(function (evt) {
+      document.removeEventListener('keydown', window.gallery.onDocumentEnterPress);
       onButtonClick(getNewPhotos, evt);
     });
     buttons[0].addEventListener('click', onButtonPopularClick);
