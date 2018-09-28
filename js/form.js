@@ -85,6 +85,7 @@
     }
   };
   fileUploadControl.addEventListener('change', function (evt) {
+    document.removeEventListener('keydown', window.gallery.onDocumentEnterPress);
     window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
     // загружаем наше изображение в превью
@@ -105,6 +106,7 @@
   };
   // закрытие формы редактировония изображения
   var closeFileUpload = function () {
+    document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
     window.form.clearStyleAndClass();
     window.util.hideElements(window.form.imgUploadOverlay);
     window.form.imgUploadForm.reset();
@@ -382,6 +384,7 @@
   window.form.imgUploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
     var onLoad = function () {
+      document.removeEventListener('keydown', onDocumentPressESC);
       window.loadMessages.deleteOnLoadMessage();
       window.util.hideElements(window.form.imgUploadOverlay);
       window.loadMessages.onLoadSuccessMessage();
@@ -390,6 +393,7 @@
     };
 
     var onError = function () {
+      document.removeEventListener('keydown', onDocumentPressESC);
       window.loadMessages.deleteOnLoadMessage();
       window.util.hideElements(window.form.imgUploadOverlay);
       window.loadMessages.onLoadErrorMessage();

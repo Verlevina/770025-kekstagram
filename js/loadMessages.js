@@ -32,6 +32,7 @@
       var onSuccessMessageClick = function (evt) {
         if (evt.target !== successInner && evt.target !== button) {
           evt.preventDefault();
+          document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
           successMessage.removeEventListener('click', onSuccessMessageClick);
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.imgUploadForm.reset();
@@ -39,6 +40,7 @@
         }
         if (evt.target === button) {
           evt.preventDefault();
+          document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
           successMessage.removeEventListener('click', onSuccessMessageClick);
           window.form.imgUploadForm.reset();
           document.removeEventListener('keyup', onDocumentPressEsc);
@@ -49,6 +51,7 @@
 
         if (evt.keyCode === window.util.ESC_KEYCODE) {
           evt.preventDefault();
+          document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
           window.form.imgUploadForm.reset();
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.loadMessages.deleteSuccessMessage(successMessage);
@@ -74,6 +77,7 @@
         if (evt.target !== errorInner && evt.target !== errorButtonTryAgain && evt.target !== errorButtonApplyAnotherFile) {
           evt.preventDefault();
           window.form.clearStyleAndClass();
+          document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
           errorMessage.removeEventListener('click', onErrorMessageClick);
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.imgUploadForm.reset();
@@ -88,6 +92,7 @@
         }
         if (evt.target === errorButtonApplyAnotherFile) {
           evt.preventDefault();
+          document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
           window.form.clearStyleAndClass();
           errorMessage.removeEventListener('click', onErrorMessageClick);
           document.removeEventListener('keyup', onDocumentPressEsc);
@@ -98,6 +103,7 @@
       errorMessage.addEventListener('click', onErrorMessageClick);
       var onDocumentPressEsc = function (evt) {
         if (evt.keyCode === window.util.ESC_KEYCODE) {
+          document.addEventListener('keydown', window.gallery.onDocumentEnterPress);
           document.removeEventListener('keyup', onDocumentPressEsc);
           window.form.clearStyleAndClass();
           window.form.imgUploadForm.reset();
