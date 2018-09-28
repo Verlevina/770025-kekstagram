@@ -99,9 +99,21 @@
       document.removeEventListener('keydown', window.gallery.onDocumentEnterPress);
       onButtonClick(getNewPhotos, evt);
     });
-    buttons[0].addEventListener('click', onButtonPopularClick);
-    buttons[1].addEventListener('click', onButtonNewClick);
-    buttons[2].addEventListener('click', onButtonDiscusingClick);
+    var buttonClicks = [onButtonPopularClick, onButtonNewClick, onButtonDiscusingClick];
+    var onDocumentSortEnterPress = function (evt) {
+      if (evt.keyCode === window.util.ENTER_KEYCODE) {
+        buttonClicks[i]();
+      }
+    };
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', buttonClicks[i]);
+      buttons[i].addEventListener('focus', function () {
+        document.addEventListener('keypress', onDocumentSortEnterPress);
+      });
+      buttons[i].addEventListener('blur', function () {
+        document.removeEventListener('keypress', onDocumentSortEnterPress);
+      });
+    }
   };
   // получение данных с сервера
   var onLoad = function (photos) {
