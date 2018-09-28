@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var descriptions = [
+  var DESCRIPTIONS = [
     'Тестим новую камеру!',
     'Затусили с друзьями на море',
     'Как же круто тут кормят',
@@ -16,23 +16,17 @@
       isFor = min;
       min = 0;
     }
-    if (typeof (isFor) === 'undefined') {
-      isFor = true;
-    }
-    if (isFor) {
-      return Math.floor(Math.random() * (max - min) + min);
-    } else {
-      return Math.ceil(Math.random() * (max - min) + min);
-    }
+
+    return !isFor ? Math.floor(Math.random() * (max - min) + min) : Math.ceil(Math.random() * (max - min) + min);
   };
 
   window.data = {
     getDescription: function () {
-      return descriptions[getRandomNumber(descriptions.length)];
+      return DESCRIPTIONS[getRandomNumber(DESCRIPTIONS.length)];
     },
     // url avatar
     getAvatarUrl: function () {
-      return 'img/avatar-' + getRandomNumber(6, false) + '.svg';
+      return 'img/avatar-' + getRandomNumber(6, true) + '.svg';
     },
   };
 })();

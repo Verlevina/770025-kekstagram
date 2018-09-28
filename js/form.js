@@ -4,7 +4,7 @@
   var EFFECT_DEEP_CONTROL_MAX = 100;
   var EFFECT_DEEP_CONTROL_MIN = 0;
   //  объект со шкалой глубин эффектов фотто
-  var DEEP_EFFECT = [
+  var DEEP_EFFECTS = [
     {
       name: 'chrome',
       value: 'grayscale',
@@ -41,6 +41,9 @@
       unit: ''
     }
   ];
+  var MAX_HASHTAGS_QUANTITY = 5;
+  var MAX_HASTAG_LENGTH = 20;
+  var MIN_HASHTAGS_LENGTH = 1;
   var PX = 'px';
   var PERCENT = '%';
   var HASHTAG = '#';
@@ -53,16 +56,18 @@
   // кнопка закрытия редактирования изображения
   var imgUploadCancel = document.querySelector('.img-upload__cancel');
   var imgUploadPreview = document.querySelector('.img-upload__preview img');
+  var imgUploadEffectLevel = window.form.imgUploadOverlay.querySelector('.img-upload__effect-level');
   // форма загрузки фото
   window.form.imgUploadForm = document.querySelector('.img-upload__form');
   var effectLevelLine = document.querySelector('.effect-level__line');
   var effectsRadio = window.form.imgUploadOverlay.querySelectorAll('.effects__radio');
   // инпут со значением глубины эффекта
   var effectLevelValue = window.form.imgUploadOverlay.querySelector('.effect-level__value');
-  var START_EFFECT_RADIO_VALUE = effectLevelValue.value;
   // 1.3. Выбор изображения для загрузки осуществляется с помощью стандартного контрола загрузки файла #upload-file,
   // который стилизован под букву «О» в логотипе. После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения.
-
+  // начальные условия
+  effectsRadio[0].checked = true;
+  window.util.hideElements(imgUploadEffectLevel);
   // функция, обрезающая проценты и писксели
   var deleteDimension = function (value) {
     if (value.slice(-PX.length) === PX) {
@@ -79,19 +84,9 @@
       closeFileUpload();
     }
   };
-  // обнуление визуального отображения формы
-  var resetForm = function () {
-    effectsRadio[effectsRadio.length - 1].checked = true;
-    effectLevelValue.value = START_EFFECT_RADIO_VALUE;
-    imgUploadPreview.style = 'transform: scale(1); filter: brightness(1.4); ';
-    effectLevelPin.style.left = effectLevelValue.value + PERCENT;
-    effectLevelDepth.style.width = effectLevelPin.style.left;
-
-  };
   fileUploadControl.addEventListener('change', function (evt) {
     window.util.showElements(window.form.imgUploadOverlay);
     document.addEventListener('keydown', onDocumentPressESC);
-    resetForm();
     // загружаем наше изображение в превью
     var file = evt.target.files[0];
     var reader = new FileReader();
@@ -99,16 +94,23 @@
     reader.addEventListener('load', function (readerEvt) {
       imgUploadPreview.src = readerEvt.target.result;
     });
-
   });
 
 
+  window.form.clearStyleAndClass = function () {
+    imgUploadPreview.style = '';
+    imgUploadPreview.className = '';
+    effectsRadio[0].checked = true;
+    window.util.hideElements(imgUploadEffectLevel);
+  };
   // закрытие формы редактировония изображения
   var closeFileUpload = function () {
+    window.form.clearStyleAndClass();
     window.util.hideElements(window.form.imgUploadOverlay);
     window.form.imgUploadForm.reset();
     document.removeEventListener('keydown', onDocumentPressESC);
   };
+
   imgUploadCancel.addEventListener('click', closeFileUpload);
   // 2. Редактирование изображения и ограничения, накладываемые на поля
   // 2.1. Масштаб:
@@ -149,8 +151,6 @@
 
   // 2.2. Наложение эффекта на изображение:
   // список радио
-
-
   // поиск выбранного radiobutton и выбор эффекта
   var findSelectedEffect = function () {
     var selectedEffectsRadio = window.form.imgUploadOverlay.querySelector('.effects__radio:checked');
@@ -172,9 +172,9 @@
     // effectLevelValue.addEventListener('change', function () {
     // document.querySelector('.img-upload__effect-level').addEventListener('click', function () {
     var effect = findSelectedEffect();
-    for (var i = 0; i < DEEP_EFFECT.length; i++) {
-      if (DEEP_EFFECT[i].name === effect) {
-        var filterValue = DEEP_EFFECT[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECT[i]) + DEEP_EFFECT[i].unit + ')';
+    for (var i = 0; i < DEEP_EFFECTS.length; i++) {
+      if (DEEP_EFFECTS[i].name === effect) {
+        var filterValue = DEEP_EFFECTS[i].value + '(' + calculateCurrentDeepEffect(DEEP_EFFECTS[i]) + DEEP_EFFECTS[i].unit + ')';
         imgUploadPreview.style.filter = filterValue;
       }
     }
@@ -217,7 +217,7 @@
   });
 
   // клик по радио
-  var imgUploadEffectLevel = window.form.imgUploadOverlay.querySelector('.img-upload__effect-level');
+
   var onEffectsRadioClick = function () {
     for (var i = 1; i < effectsRadio.length; i++) {
       effectsRadio[i].addEventListener('click', function () {
@@ -325,12 +325,8 @@
     return string.toLowerCase();
   };
 
-
   // проверяем валидность хэштегов
   var getInvalidMessage = function () {
-    var MAX_HASHTAGS_QUANTITY = 5;
-    var MAX_HASTAG_LENGTH = 20;
-    var MIN_HASHTAGS_LENGTH = 1;
     var stringOfHashtags = getStringInLowerCase(textHashtags.value);
     var isWhiteSpace = false;
     var quantity = 0;
@@ -389,6 +385,7 @@
       window.loadMessages.deleteOnLoadMessage();
       window.util.hideElements(window.form.imgUploadOverlay);
       window.loadMessages.onLoadSuccessMessage();
+      window.form.clearStyleAndClass();
       window.form.imgUploadForm.reset();
     };
 

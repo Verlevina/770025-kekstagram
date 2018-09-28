@@ -16,5 +16,17 @@
         window.util.hideElements(window.util.bigPicture);
       }
     },
+    deleteChildren: function (elements, isTagA) {
+      var elementsLength = elements.childElementCount;
+      for (var i = elementsLength - 1; i >= 0; i--) {
+        if (isTagA) {
+          if (elements.children[i].tagName === 'A') {
+            elements.removeChild(elements.children[i]);
+          }
+        } else {
+          elements.removeChild(elements.children[i]);
+        }
+      }
+    }
   };
 })();
